@@ -1,0 +1,1216 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Horizontal Stacked Bar Charts with Shared Interactive Legend and Data Labels</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+    <!-- Chart.js Data Labels plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+    <style>
+        .chart-containerM {
+            width: 700px;
+            margin-bottom: 0px;
+        }
+
+        #shared-legendM {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+            user-select: none;
+        }
+
+        .legend-itemMM {
+            display: flex;
+            align-itemMs: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+            .legend-itemM.disabledM {
+                opacity: 0.4;
+            }
+
+        .legend-color-boxM {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+       .chart-columnsM {
+    display: flex;
+    /*gap: 20px;*/ /* spacing between columns */
+}
+
+.columnM {
+    flex: 1; /* each column takes equal width */
+    display: flex;
+    flex-direction: column;
+    /*gap: 20px;*/ /* spacing between charts in column */
+}
+    </style>
+</head>
+<body>
+    
+
+    <!-- Shared Legend -->
+    <div id="shared-legendM"></div>
+    <h2 style="text-align:center"><u>Male</u></h2>
+    <div class="chart-columnsM">
+        <!-- Column 1 -->
+        <!--20-39-->
+        <div class="columnM">
+            <div class="chart-containerM">
+                <h3 style="text-align:center">20-39</h3> 
+                
+                <canvas id="buccalChart" height="100"></canvas>
+            </div>
+
+            <div class="chart-containerM">
+               
+                <canvas id="lungChart" height="100"></canvas>
+            </div>
+            <div class="chart-containerM">
+               
+                <canvas id="OesophagusChart" height="100"></canvas>
+            </div>
+            <div class="chart-containerM">
+               
+                <canvas id="ProstateChart" height="100"></canvas>
+            </div>
+            <div class="chart-containerM">
+             
+                <canvas id="StomachChart" height="100"></canvas>
+            </div>
+        </div>
+
+
+        <!--40-59-->
+        <div class="columnM">
+            <div class="chart-containerM">
+               <h3 style="text-align:center">40-59</h3> 
+               
+                <canvas id="buccal40Chart" height="100"></canvas>
+            </div>
+
+            <div class="chart-containerM">
+              
+                <canvas id="lung40Chart" height="100"></canvas>
+            </div>
+            <div class="chart-containerM">
+                
+                <canvas id="Oesophagus40Chart" height="100"></canvas>
+            </div>
+            <div class="chart-containerM">
+              
+                <canvas id="Prostate40Chart" height="100"></canvas>
+            </div>
+            <div class="chart-containerM">
+               
+                <canvas id="Stomach40Chart" height="100"></canvas>
+            </div>
+        </div>
+
+
+
+            <!--60+-->
+        <div class="columnM">
+            <div class="chart-containerM">
+               <h3 style="text-align:center">60+</h3> 
+              
+                <canvas id="buccal60Chart" height="100"></canvas>
+            </div>
+
+            <div class="chart-containerM">
+                
+                <canvas id="lung60Chart" height="100"></canvas>
+            </div>
+            <div class="chart-containerM">
+            
+                <canvas id="Oesophagus60Chart" height="100"></canvas>
+            </div>
+            <div class="chart-containerM">
+                
+                <canvas id="Prostate60Chart" height="100"></canvas>
+            </div>
+            <div class="chart-containerM">
+                
+                <canvas id="Stomach60Chart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+
+        <script>
+            // Register the datalabels plugin globally
+            Chart.register(ChartDataLabels);
+
+            // Common labels and colors for legend and datasets
+            const legendLabelsM = ['Only Sx', 'Only RT', 'Only CT', 'Combination'];
+            const legendColorsM = [
+                '#1769aa',
+                '#b28704',
+                '#0cad4e',
+                '#ff5722'
+            ];
+
+            // Create shared legend dynamically with click handlers
+            const legendContainerM = document.getElementById('shared-legendM');
+
+            // Track visibility state for each dataset (true = visible)
+            const visibilityStateM = [true, true, true, true];
+
+            // Create legend itemMs
+            legendLabelsM.forEach((label, i) => {
+                const itemM = document.createElement('div');
+                itemM.classList.add('legend-itemMM');
+                itemM.dataset.index = i;
+
+                const colorBox = document.createElement('div');
+                colorBox.classList.add('legend-color-boxM');
+                colorBox.style.backgroundColor = legendColorsM[i];
+
+                const text = document.createElement('span');
+                text.textContent = label;
+                text.style.fontSize = '22px';
+
+                itemM.appendChild(colorBox);
+                itemM.appendChild(text);
+                legendContainerM.appendChild(itemM);
+
+                // Click event to toggle dataset visibility in both charts
+                itemM.addEventListener('click', () => {
+                    visibilityStateM[i] = !visibilityStateM[i];
+                    updateDatasetVisibility(i, visibilityStateM[i]);
+                    itemM.classList.toggle('disabled', !visibilityStateM[i]);
+                });
+            });
+
+            // Buccal Mucosa Chart
+            const buccalCtx = document.getElementById('buccalChart').getContext('2d');
+
+            const buccalData = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [38.46, 64.58, 33.33];
+                            case 'Only CT': return [0.70, 24.14, 66.67];
+                            case 'Only RT': return [1.40, 0.31, 0.00];
+                            case 'Only Sx': return [59.44, 10.97, 0.00];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const buccalOptions = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            //  weight: 'bold',
+                            size: 14
+                        },
+                        formatter: function (value, context) {
+                            // Show label only if dataset is visible and value > 0
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y:
+                        {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: 'Buccal Mucosa',
+                                color: 'black',      // text color
+                                font: {
+                                    family: 'Arial', // font family
+                                    size: 16,        // font size
+                                    weight: 'bold' // optional (bold, normal, etc.)
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    size: 16  // <-- Increased font size here
+                                },
+                                color: '#000000'
+                            }
+                        }
+                }
+            };
+
+            const buccalChart = new Chart(buccalCtx, {
+                type: 'bar',
+                data: buccalData,
+                options: buccalOptions,
+                plugins: [ChartDataLabels]
+            });
+
+            // Lung Chart
+            const lungCtx = document.getElementById('lungChart').getContext('2d');
+
+            const lungData = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [9.09, 44.44, 52.28];
+                            case 'Only CT': return [9.09, 22.22, 39.59];
+                            case 'Only RT': return [9.09, 0.00, 7.11];
+                            case 'Only Sx': return [72.73, 33.33, 1.02];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const lungOptions = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2) : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: {
+                            display: true, text: 'Lung',
+                            color: 'black',      // text color
+                            font: {
+                                family: 'Arial', // font family
+                                size: 16,        // font size
+                                weight: 'bold' // optional (bold, normal, etc.)
+                            }
+                        },
+                        ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const lungChart = new Chart(lungCtx, {
+                type: 'bar',
+                data: lungData,
+                options: lungOptions,
+                plugins: [ChartDataLabels]
+            });
+
+
+            // Oesophagus Chart
+            const OesophagusCtx = document.getElementById('OesophagusChart').getContext('2d');
+
+            const OesophagusData = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [60.00, 68.63, 33.33];
+                            case 'Only CT': return [0.00, 29.41, 61.11];
+                            case 'Only RT': return [0.00, 0.00, 5.56];
+                            case 'Only Sx': return [40.00, 1.96, 0.00];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const OesophagusOptions = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: {
+                            display: true, text: 'Oesophagus',
+                            color: 'black',      // text color
+                            font: {
+                                family: 'Arial', // font family
+                                size: 16,        // font size
+                                weight: 'bold' // optional (bold, normal, etc.)
+                            }
+                        }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const OesophagusChart = new Chart(OesophagusCtx, {
+                type: 'bar',
+                data: OesophagusData,
+                options: OesophagusOptions,
+                plugins: [ChartDataLabels]
+            });
+
+
+            //Prostate chart
+            const ProstateCtx = document.getElementById('ProstateChart').getContext('2d');
+
+            const ProstateData = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [0.00, 0.00, 50.00];
+                            case 'Only CT': return [0.00, 0.00, 0.00];
+                            case 'Only RT': return [0.00, 0.00, 50.00];
+                            case 'Only Sx': return [0.00, 0.00, 0.00];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const ProstateOptions = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2) : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: {
+                            display: true, text: 'Prostate',
+                            color: 'black',      // text color
+                            font: {
+                                family: 'Arial', // font family
+                                size: 16,        // font size
+                                weight: 'bold' // optional (bold, normal, etc.)
+                            }
+                        }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const ProstateChart = new Chart(ProstateCtx, {
+                type: 'bar',
+                data: ProstateData,
+                options: ProstateOptions,
+                plugins: [ChartDataLabels]
+            });
+
+
+            //Stomach chart
+
+            const StomachCtx = document.getElementById('StomachChart').getContext('2d');
+
+            const StomachData = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [88.24, 75.00, 29.41];
+                            case 'Only CT': return [5.88, 22.50, 67.65];
+                            case 'Only RT': return [0.00, 0.00, 2.94];
+                            case 'Only Sx': return [5.88, 2.50, 0.00];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const StomachOptions = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: {
+                            display: true, text: 'Stomach',
+                            color: 'black',      // text color
+                            font: {
+                                family: 'Arial', // font family
+                                size: 16,        // font size
+                                weight: 'bold' // optional (bold, normal, etc.)
+                            }
+                        }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const StomachChart = new Chart(StomachCtx, {
+                type: 'bar',
+                data: StomachData,
+                options: StomachOptions,
+                plugins: [ChartDataLabels]
+            });
+
+            //40-59
+            //Buccal Mucosa
+            const buccal40Ctx = document.getElementById('buccal40Chart').getContext('2d');
+
+            const buccal40Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [41.73, 60.75, 24.00];
+                            case 'Only CT': return [1.08,22.49,68.00];
+                            case 'Only RT': return [1.08,0.62,4.00];
+                            case 'Only Sx': return [56.10,16.14,4.00];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const buccal40Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            //  weight: 'bold',
+                            size: 14
+                        },
+                        formatter: function (value, context) {
+                            // Show label only if dataset is visible and value > 0
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const buccal40Chart = new Chart(buccal40Ctx, {
+                type: 'bar',
+                data: buccal40Data,
+                options: buccal40Options,
+                plugins: [ChartDataLabels]
+            });
+
+            //lung 40-59
+            const lung40Ctx = document.getElementById('lung40Chart').getContext('2d');
+
+            const lung40Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [26.23,59.46,50.47];
+                            case 'Only CT': return [13.11,31.08,41.43];
+                            case 'Only RT': return [8.20,2.16,7.92];
+                            case 'Only Sx': return [52.46,7.30,0.17];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const lung40Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const lung40Chart = new Chart(lung40Ctx, {
+                type: 'bar',
+                data: lung40Data,
+                options: lung40Options,
+                plugins: [ChartDataLabels]
+            });
+
+
+            // Oesophagus 40-59 Chart
+            const Oesophagus40Ctx = document.getElementById('Oesophagus40Chart').getContext('2d');
+
+            const Oesophagus40Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [58.54,72.30,45.53];
+                            case 'Only CT': return [17.07,23.47,48.78];
+                            case 'Only RT': return [4.88,2.11,5.69];
+                            case 'Only Sx': return [19.51,2.11,0.00];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const Oesophagus40Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const Oesophagus40Chart = new Chart(Oesophagus40Ctx, {
+                type: 'bar',
+                data: Oesophagus40Data,
+                options: Oesophagus40Options,
+                plugins: [ChartDataLabels]
+            });
+
+
+            //Prostate chart 40-59
+            const Prostate40Ctx = document.getElementById('Prostate40Chart').getContext('2d');
+
+            const Prostate40Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [50.00,83.93,88.46];
+                            case 'Only CT': return [1.79,3.57,8.65];
+                            case 'Only RT': return [1.79,0.00,1.92];
+                            case 'Only Sx': return [46.43,12.50,0.96];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const Prostate40Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const Prostate40Chart = new Chart(Prostate40Ctx, {
+                type: 'bar',
+                data: Prostate40Data,
+                options: Prostate40Options,
+                plugins: [ChartDataLabels]
+            });
+
+
+            //Stomach chart40-59
+
+            const Stomach40Ctx = document.getElementById('Stomach40Chart').getContext('2d');
+
+            const Stomach40Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [72.22,75.60,28.75];
+                            case 'Only CT': return [11.11,19.94,65.81];
+                            case 'Only RT': return [0.00,1.19,5.11];
+                            case 'Only Sx': return [16.67,3.27,0.32];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const Stomach40Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2) : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const Stomach40Chart = new Chart(Stomach40Ctx, {
+                type: 'bar',
+                data: Stomach40Data,
+                options: Stomach40Options,
+                plugins: [ChartDataLabels]
+            });
+
+
+
+
+            //Buccal Mucosa  60+
+            const buccal60Ctx = document.getElementById('buccal60Chart').getContext('2d');
+
+            const buccal60Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [41.73, 60.75, 24.00];
+                            case 'Only CT': return [1.08,22.49,68.00];
+                            case 'Only RT': return [1.08,0.62,4.00];
+                            case 'Only Sx': return [56.10,16.14,4.00];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const buccal60Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            //  weight: 'bold',
+                            size: 14
+                        },
+                        formatter: function (value, context) {
+                            // Show label only if dataset is visible and value > 0
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const buccal60Chart = new Chart(buccal60Ctx, {
+                type: 'bar',
+                data: buccal60Data,
+                options: buccal60Options,
+                plugins: [ChartDataLabels]
+            });
+
+            //lung 40-59
+            const lung60Ctx = document.getElementById('lung60Chart').getContext('2d');
+
+            const lung60Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [26.23,59.46,50.47];
+                            case 'Only CT': return [13.11,31.08,41.43];
+                            case 'Only RT': return [8.20,2.16,7.92];
+                            case 'Only Sx': return [52.46,7.30,0.17];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const lung60Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const lung60Chart = new Chart(lung60Ctx, {
+                type: 'bar',
+                data: lung60Data,
+                options: lung60Options,
+                plugins: [ChartDataLabels]
+            });
+
+
+            // Oesophagus 40-59 Chart
+            const Oesophagus60Ctx = document.getElementById('Oesophagus60Chart').getContext('2d');
+
+            const Oesophagus60Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [58.54,72.30,45.53];
+                            case 'Only CT': return [17.07,23.47,48.78];
+                            case 'Only RT': return [4.88,2.11,5.69];
+                            case 'Only Sx': return [19.51,2.11,0.00];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const Oesophagus60Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)  : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const Oesophagus60Chart = new Chart(Oesophagus60Ctx, {
+                type: 'bar',
+                data: Oesophagus60Data,
+                options: Oesophagus60Options,
+                plugins: [ChartDataLabels]
+            });
+
+
+            //Prostate chart 40-59
+            const Prostate60Ctx = document.getElementById('Prostate60Chart').getContext('2d');
+
+            const Prostate60Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [50.00,83.93,88.46];
+                            case 'Only CT': return [1.79,3.57,8.65];
+                            case 'Only RT': return [1.79,0.00,1.92];
+                            case 'Only Sx': return [46.43,12.50,0.96];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const Prostate60Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2) : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const Prostate60Chart = new Chart(Prostate60Ctx, {
+                type: 'bar',
+                data: Prostate60Data,
+                options: Prostate60Options,
+                plugins: [ChartDataLabels]
+            });
+
+
+            //Stomach chart40-59
+
+            const Stomach60Ctx = document.getElementById('Stomach60Chart').getContext('2d');
+
+            const Stomach60Data = {
+                labels: ['Localised', 'Regional', 'Distant Mets'],
+                datasets: legendLabelsM.map((label, i) => ({
+                    label: label,
+                    data: (() => {
+                        switch (label) {
+                            case 'Combination': return [72.22,75.60,28.75];
+                            case 'Only CT': return [11.11,19.94,65.81];
+                            case 'Only RT': return [0.00,1.19,5.11];
+                            case 'Only Sx': return [16.67,3.27,0.32];
+                        }
+                    })(),
+                    backgroundColor: legendColorsM[i]
+                }))
+            };
+
+            const Stomach60Options = {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        anchor: 'center',
+                        align: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function (value, context) {
+                            if (context.chart.data.datasets[context.datasetIndex].hidden) return '';
+                            return value > 0 ? value.toFixed(2)   : '';
+                        }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, beginAtZero: true, max: 100, title: { display: true, text: '' } },
+                    y: {
+                        stacked: true, title: { display: true, text: '' }, ticks: {
+                            font: {
+                                size: 16  // <-- Increased font size here
+                            },
+                            color: '#000000'
+                        }
+                    }
+                }
+            };
+
+            const Stomach60Chart = new Chart(Stomach60Ctx, {
+                type: 'bar',
+                data: Stomach60Data,
+                options: Stomach60Options,
+                plugins: [ChartDataLabels]
+            });
+
+
+
+
+
+
+
+            // Function to toggle dataset visibility in both charts
+            function updateDatasetVisibility(datasetIndex, visible) {
+                buccalChart.data.datasets[datasetIndex].hidden = !visible;
+                buccalChart.update();
+
+                lungChart.data.datasets[datasetIndex].hidden = !visible;
+                lungChart.update();
+
+                OesophagusChart.data.datasets[datasetIndex].hidden = !visible;
+                OesophagusChart.update();
+
+                ProstateChart.data.datasets[datasetIndex].hidden = !visible;
+                ProstateChart.update();
+
+                StomachChart.data.datasets[datasetIndex].hidden = !visible;
+                StomachChart.update();
+
+                //40-59
+                buccal40Chart.data.datasets[datasetIndex].hidden = !visible;
+                buccal40Chart.update();
+
+                lung40Chart.data.datasets[datasetIndex].hidden = !visible;
+                lung40Chart.update();
+
+                Oesophagus40Chart.data.datasets[datasetIndex].hidden = !visible;
+                Oesophagus40Chart.update();
+
+                Prostate40Chart.data.datasets[datasetIndex].hidden = !visible;
+                Prostate40Chart.update();
+
+                Stomach40Chart.data.datasets[datasetIndex].hidden = !visible;
+                Stomach40Chart.update();
+
+                //60+
+                //40-59
+                buccal60Chart.data.datasets[datasetIndex].hidden = !visible;
+                buccal60Chart.update();
+
+                lung60Chart.data.datasets[datasetIndex].hidden = !visible;
+                lung60Chart.update();
+
+                Oesophagus60Chart.data.datasets[datasetIndex].hidden = !visible;
+                Oesophagus60Chart.update();
+
+                Prostate60Chart.data.datasets[datasetIndex].hidden = !visible;
+                Prostate60Chart.update();
+
+                Stomach60Chart.data.datasets[datasetIndex].hidden = !visible;
+                Stomach60Chart.update();
+            }
+        </script>
+</body>
+</html>

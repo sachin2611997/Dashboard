@@ -1,0 +1,2461 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+   
+    <meta name="viewport" content="width=device-width" />
+    <title>analysis</title>
+   
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+    <!-- Chart.js Data Labels plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+
+   
+    <style>
+/* From Uiverse.io by german_7619 */ 
+   .chart-containerM {
+            width: 700px;
+            margin-bottom: 0px;
+        }
+
+        #shared-legendM {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+            user-select: none;
+        }
+
+        .legend-itemM {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+            .legend-item.disabledM {
+                opacity: 0.4;
+            }
+
+        .legend-color-boxM {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+       .chart-columnsM {
+    display: flex;
+    /*gap: 20px;*/ /* spacing between columns */
+}
+
+.columnM {
+    flex: 1; /* each column takes equal width */
+    display: flex;
+    flex-direction: column;
+    /*gap: 20px;*/ /* spacing between charts in column */
+}
+  .chart-container2 {
+            width: 700px;
+            margin-bottom: 0px;
+        }
+
+        #shared-legend2 {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            font-family: Arial, sans-serif;
+            user-select: none;
+        }
+
+        .legend-item2 {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+            .legend-item.disabled2 {
+                opacity: 0.4;
+            }
+
+        .legend-color-box2 {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .chart-columns2 {
+            display: flex;
+            /*gap: 20px;*/ /* spacing between columns */
+        }
+
+        .column2 {
+            flex: 1; /* each column takes equal width */
+            display: flex;
+            flex-direction: column;
+            /*gap: 20px;*/ /* spacing between charts in column */
+        }
+
+ .charts-row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .chart-container {
+            width: 30%;
+            min-width: 300px;
+            height: 300px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .legend-container {
+            /*max-width: 900px;*/
+            margin: 0 auto 30px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            user-select: none;
+        }
+
+        /*.legend-item {
+            cursor: pointer;
+            margin: 5px 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.3s;
+            user-select: none;
+        }*/
+
+        .legend-color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border-radius: 3px;
+            /*border: 1px solid #333;*/
+        }
+
+        .legend-item.disabled {
+            opacity: 0.4;
+            text-decoration: line-through;
+        }
+        .chart-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 8px;
+      text-align: center;
+      width: 100%;
+    }
+
+
+
+.radio-inputs {
+  position: relative;
+  display: flex;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  background-color: #70c489;
+  font-size: 14px;
+ 
+  padding: 0.5rem 1.5rem 0 1.5rem;
+}
+
+.radio-inputs .radio input {
+  display: none;
+}
+
+.radio-inputs .radio .name {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.15s ease-in-out;
+  position: relative;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.radio-inputs .radio input + .name:hover {
+  color: #fff;
+}
+
+.radio-inputs .radio input + .name .pre-name,
+.radio-inputs .radio input + .name .pos-name {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #70c489;
+  bottom: 0;
+  opacity: 0;
+}
+
+.radio-inputs .radio input + .name .pre-name {
+  right: -10px;
+  border-bottom-left-radius: 300px;
+  box-shadow: -3px 3px 0px 3px #e8e8e8;
+}
+
+.radio-inputs .radio input + .name .pos-name {
+  left: -10px;
+  border-bottom-right-radius: 300px;
+  box-shadow: 3px 3px 0px 3px #e8e8e8;
+}
+
+.radio-inputs .radio input:checked + .name {
+  animation: name-activated;
+  animation-duration: 0.1s;
+  animation-fill-mode: forwards;
+}
+
+@@keyframes name-activated {
+  from {
+    background-color: #70c489;
+    font-weight: 400;
+    cursor: pointer;
+    color: white;
+  }
+
+  to {
+    background-color: #e8e8e8;
+    font-weight: 600;
+    cursor: default;
+    color: black;
+  }
+}
+
+.radio-inputs .radio input:checked + .name .pre-name,
+.radio-inputs .radio input:checked + .name .pos-name {
+  animation: name-border-activated;
+  animation-duration: 0.1s;
+  animation-fill-mode: forwards;
+  z-index: 0;
+}
+
+@@keyframes name-border-activated {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.radio-inputs .radio .name span:last-child {
+  z-index: 1;
+  padding: 0.5rem 0.8rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.radio-inputs .radio input:checked + .name span:last-child {
+  animation: name-text-activated;
+  animation-duration: 0.1s;
+  animation-fill-mode: forwards;
+}
+
+@@keyframes name-text-activated {
+  from {
+    background-color: #70c489;
+  }
+
+  to {
+    background-color: #e8e8e8;
+  }
+}
+
+.radio-inputs > .radio > .content {
+  display: none;
+}
+
+.radio-inputs > label.radio > input:checked ~ div.content {
+  display: block;
+}
+
+.radio-inputs > label.radio > input:checked ~ div.content div * {
+  animation: content-activated;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+.content {
+  /*background-color: #70c489;*/
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+.content > div {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  padding-bottom: 1.2rem;
+  /*border: 4px solid #70c489;*/
+  border-top-width: 0px;
+}
+ 
+
+@@keyframes content-activated {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+
+
+
+    </style>
+</head>
+<body>
+    <!-- From Uiverse.io by german_7619 -->
+    <div class="radio-inputs">
+        <label class="radio">
+            <input type="radio" name="radio" checked="" />
+            <span class="name">
+                <span class="pre-name"></span>
+                <span class="pos-name"></span>
+                <span> Leading </span>
+            </span>
+            <div class="content">
+                <div>
+                    <h2>Male</h2>
+                    <div id="legend-group1" class="legend-container"></div>
+
+                    <div class="charts-row" id="charts-row-1">
+
+                        <div class="chart-container"><div class="chart-title">20-39</div><canvas id="chart1"></canvas></div>
+                        <div class="chart-container"><div class="chart-title">40-59</div><canvas id="chart2"></canvas></div>
+                        <div class="chart-container"><div class="chart-title">60+</div>  <canvas id="chart3"></canvas></div>
+                    </div>
+
+                    <h2>Female</h2>
+                    <div id="legend-group2" class="legend-container"></div>
+                    <div class="charts-row" id="charts-row-2">
+                        <div class="chart-container"><div class="chart-title">20-39</div><canvas id="chart4"></canvas></div>
+                        <div class="chart-container"><div class="chart-title">40-59</div><canvas id="chart5"></canvas></div>
+                        <div class="chart-container"><div class="chart-title">60+</div>  <canvas id="chart6"></canvas></div>
+                    </div>
+
+                </div>
+            </div>
+        </label>
+        <label class="radio">
+            <input type="radio" name="radio" />
+            <span class="name">
+                <span class="pre-name"></span>
+                <span class="pos-name"></span>
+                <span> Clinical Extent </span>
+            </span>
+            <div class="content">
+                <!-- Shared Legend -->
+                <div id="shared-legend">
+                    <span class="legend-item" data-index="0" style="cursor:pointer;font-size:20px; padding:5px 10px; background-color:#0000c0;color:#ffffff; margin-right:10px; border-radius:4px;">20-39</span>
+                    <span class="legend-item" data-index="1" style="cursor:pointer;font-size:20px; padding:5px 10px; background-color:#008000;color:#ffffff; margin-right:10px; border-radius:4px;">40-59</span>
+                    <span class="legend-item" data-index="2" style="cursor:pointer;font-size:20px; padding:5px 10px; background-color:#ff0000;color:#ffffff; border-radius:4px;">60+</span>
+                </div>
+
+                <h1 style="color:white;text-align:center;background:#1769aa;">Male</h1>
+
+                <!--male -->
+                <div style="display: flex; gap: 20px;">
+
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Lung</h2>
+                        <canvas id="LungchartCE1" width="600" height="400"></canvas>
+                    </div>
+
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Prostate</h2>
+                        <canvas id="ProstatechartCE2" width="600" height="400"></canvas>
+                    </div>
+
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Buccal Mucosa</h2>
+                        <canvas id="bmchartCE3" width="600" height="400"></canvas>
+                    </div>
+
+                </div>
+                <div style="display: flex; gap: 20px;">
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Stomach</h2>
+                        <canvas id="stomachchartCE4" width="600" height="400"></canvas>
+                    </div>
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Oesophagus</h2>
+                        <canvas id="OesophaguschartCE5" width="600" height="400"></canvas>
+                    </div>
+                </div>
+
+
+
+                <h1 style="color:white;text-align:center;background:#1769aa;">Female</h1>
+
+                <!--Female -->
+                <div style="display: flex; gap: 20px;">
+
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Breast</h2>
+                        <canvas id="BreastchartCE1" width="600" height="400"></canvas>
+                    </div>
+
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Cervix</h2>
+                        <canvas id="CervixchartCE2" width="600" height="400"></canvas>
+                    </div>
+
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Lung</h2>
+                        <canvas id="LungfchartCE3" width="600" height="400"></canvas>
+                    </div>
+
+                </div>
+
+                <div style="display: flex; gap: 20px;">
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Gall Bladder</h2>
+                        <canvas id="gbchartCE4" width="600" height="400"></canvas>
+                    </div>
+                    <div style="width: 600px;">
+                        <h2 style="text-align:center">Ovary</h2>
+                        <canvas id="OvarychartCE5" width="600" height="400"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+        </label>
+
+        <label class="radio">
+            <input type="radio" name="radio" />
+            <span class="name">
+                <span class="pre-name"></span>
+                <span class="pos-name"></span>
+                <span> Treatment </span>
+            </span>
+            <div class="content">
+
+                <h2 style="text-align:center;">Male</h2>
+                <div id="legend1" style="text-align:center; margin-bottom:20px;"></div>
+
+                <div style="display:flex; gap:30px; justify-content:center;" id="group1">
+                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">20-39</div><canvas id="chartt1"></canvas></div>
+                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">40-59</div><canvas id="chartt2"></canvas> </div>
+                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">60+</div>  <canvas id="chartt3"></canvas></div>
+                </div>
+
+                <h2 style="text-align:center;margin-top:40px;">Female</h2>
+                <div id="legend2" style="text-align:center; margin-bottom:20px;"></div>
+
+                <div style="display:flex;  gap:30px; justify-content:center;" id="group2">
+                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">20-39</div><canvas id="chartt4"></canvas> </div>
+                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">40-59</div><canvas id="chartt5"></canvas></div>
+                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">60+</div>  <canvas id="chartt6"></canvas></div>
+                </div>
+
+            </div>
+        </label>
+
+        <label class="radio">
+            <input type="radio" name="radio" />
+            <span class="name">
+                <span class="pre-name"></span>
+                <span class="pos-name"></span>
+                <span>  <a href="maleMod.html">Male Modality</a>  </span> 
+            </span>
+            </label>
+
+        <label class="radio">
+            <input type="radio" name="radio" />
+            <span class="name">
+                <span class="pre-name"></span>
+                <span class="pos-name"></span>
+                 <span>  <a href="feMod.html">Female Modality</a>  </span> 
+            </span>
+        </label>
+
+</div>
+
+</body>
+</html>
+<!-- Resources -->
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<!--Start Leading-->
+
+
+<script>
+    // Register datalabels plugin globally
+    Chart.register(ChartDataLabels);
+
+    // Data for group 1
+    const data1 = [
+      { country: "Buccal Mucosa", value: 7.94 },
+      { country: "Leukemia", value: 7.81 },
+      { country: "Anterior Tongue", value: 4.77 },
+      { country: "Non-Hodgkins Lymphoma", value: 2.95 },
+      { country: "Rectum", value: 2.88 }
+
+    ];
+    const data2 = [
+
+    { country: "Buccal Mucosa", value: 19.01 },
+    { country: "Leukemia", value: 5.66 },
+    { country: "Anterior Tongue", value: 8.31 },
+    { country: "Non-Hodgkins Lymphoma", value: 5.47 },
+    { country: "Lung", value: 10.60 }
+    ];
+    const data3 = [
+      { country: "Buccal Mucosa", value: 5.43 },
+      { country: "Prostate", value: 10.04 },
+      { country: "Stomach", value: 4.77 },
+      { country: "Oesophagus", value: 4.61 },
+      { country: "Lung", value: 13.00 }
+    ];
+
+    // Data for group 2
+    const data4 = [
+      { country: "Breast", value: 28.79 },
+      { country: "Leukemia", value: 8.51 },
+      { country: "Thyroid", value: 7.56 },
+      { country: "Ovary", value: 5.91 },
+      { country: "Cervix", value: 4.84 }
+    ];
+    const data5 = [
+      { country: "Breast", value: 31.90 },
+      { country: "Cervix", value: 10.92 },
+      { country: "Gall Bladder", value: 7.18 },
+      { country: "Ovary", value: 6.74 },
+      { country: "Lung", value: 4.24 }
+    ];
+    const data6 = [
+      { country: "Breast", value: 23.77 },
+      { country: "Cervix", value: 10.18 },
+      { country: "Lung", value: 6.15 },
+      { country: "Gall Bladder", value: 6.04 },
+      { country: "Ovary", value: 5.26 }
+    ];
+
+    // Utility: sort descending by value
+    function sortDescending(data) {
+      return data.slice().sort((a,b) => b.value - a.value);
+    }
+
+    // Sort all datasets
+    const sortedDataGroup1 = [sortDescending(data1), sortDescending(data2), sortDescending(data3)];
+    const sortedDataGroup2 = [sortDescending(data4), sortDescending(data5), sortDescending(data6)];
+
+    // Get unique countries for each group
+    function getUniqueCountries(datasets) {
+      const set = new Set();
+      datasets.forEach(data => data.forEach(d => set.add(d.country)));
+      return Array.from(set);
+    }
+    const countriesGroup1 = getUniqueCountries(sortedDataGroup1);
+    const countriesGroup2 = getUniqueCountries(sortedDataGroup2);
+
+    // Assign colors for all countries (you can customize colors)
+    const colorPalette = [
+      '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+      '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'
+    ];
+    // Map countries to colors for group 1 and 2 separately
+    function assignColors(countries) {
+      const colors = {};
+      countries.forEach((c,i) => {
+        colors[c] = colorPalette[i % colorPalette.length];
+      });
+      return colors;
+    }
+    const colorsGroup1 = assignColors(countriesGroup1);
+    const colorsGroup2 = assignColors(countriesGroup2);
+
+    // Prepare chart data for a single chart
+    // Sort data descending, labels = countries, data = values, backgroundColor by country
+    function prepareChartData(data, colors) {
+      const sorted = sortDescending(data);
+      return {
+        labels: sorted.map(d => d.country),
+        datasets: [{
+          label: 'Value',
+          data: sorted.map(d => d.value),
+          backgroundColor: sorted.map(d => colors[d.country]),
+          borderRadius: 5,
+          barPercentage: 0.7,
+          categoryPercentage: 0.8
+        }]
+      };
+    }
+
+    // Common chart options
+    const commonOptions = {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
+        },
+        y: {
+            ticks: { font: { size: 18 }, color: '#000000' }
+        }
+      },
+      plugins: {
+          legend: { display: false },
+
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.label}: ${ctx.parsed.x}`
+          }
+        },
+        datalabels: {
+          anchor: 'end',
+          align: 'start',
+         // color: '#000',
+          color: '#ffffff',
+          font: {
+            weight: 'bold',
+            size: 14,
+
+          },
+          formatter: value => value.toFixed(2)
+        }
+      },
+      animation: { duration: 800 }
+    };
+
+    // Create charts for group 1
+    const ctx1 = document.getElementById('chart1').getContext('2d');
+    const ctx2 = document.getElementById('chart2').getContext('2d');
+    const ctx3 = document.getElementById('chart3').getContext('2d');
+
+    const chart1 = new Chart(ctx1, {
+      type: 'bar',
+      data: prepareChartData(data1, colorsGroup1),
+      options: commonOptions,
+
+      plugins: [ChartDataLabels]
+    });
+    const chart2 = new Chart(ctx2, {
+      type: 'bar',
+      data: prepareChartData(data2, colorsGroup1),
+      options: commonOptions,
+      plugins: [ChartDataLabels]
+    });
+    const chart3 = new Chart(ctx3, {
+      type: 'bar',
+      data: prepareChartData(data3, colorsGroup1),
+      options: commonOptions,
+      plugins: [ChartDataLabels]
+    });
+
+    // Create charts for group 2
+    const ctx4 = document.getElementById('chart4').getContext('2d');
+    const ctx5 = document.getElementById('chart5').getContext('2d');
+    const ctx6 = document.getElementById('chart6').getContext('2d');
+
+        const chart4 = new Chart(ctx4, {
+            type: 'bar',
+            data: prepareChartData(data4, colorsGroup2),
+            options: commonOptions,
+      plugins: [ChartDataLabels]
+    });
+    const chart5 = new Chart(ctx5, {
+      type: 'bar',
+      data: prepareChartData(data5, colorsGroup2),
+      options: commonOptions,
+      plugins: [ChartDataLabels]
+    });
+    const chart6 = new Chart(ctx6, {
+      type: 'bar',
+      data: prepareChartData(data6, colorsGroup2),
+      options: commonOptions,
+      plugins: [ChartDataLabels]
+    });
+
+    // Shared legend logic for each group
+    function createLegend(containerId, countries, colors, charts) {
+      const container = document.getElementById(containerId);
+      const visibility = {};
+      countries.forEach(c => visibility[c] = true);
+
+      countries.forEach(country => {
+        const item = document.createElement('div');
+        item.classList.add('legend-item');
+        item.dataset.country = country;
+
+          // Apply inline styles instead of CSS class
+        Object.assign(item.style, {
+            cursor: 'pointer',
+            margin: '5px 15px',
+            //  fontWeight: 'bold',
+            fontSize: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            opacity: '1',
+            transition: 'opacity 0.3s',
+            userSelect: 'none'
+        });
+
+
+        const colorBox = document.createElement('div');
+        colorBox.classList.add('legend-color-box');
+        colorBox.style.backgroundColor = colors[country];
+
+        const label = document.createElement('span');
+        label.textContent = country;
+
+        item.appendChild(colorBox);
+        item.appendChild(label);
+
+        item.addEventListener('click', () => {
+          visibility[country] = !visibility[country];
+          if (visibility[country]) {
+            item.classList.remove('disabled');
+          } else {
+            item.classList.add('disabled');
+          }
+
+          charts.forEach(chart => {
+            const dataset = chart.data.datasets[0];
+            const idx = chart.data.labels.indexOf(country);
+            if (idx !== -1) {
+              dataset.data[idx] = visibility[country] ? getOriginalValue(chart, country) : 0;
+            }
+            chart.update();
+          });
+        });
+
+        container.appendChild(item);
+      });
+
+      // Helper to get original value for a country in a chart
+      function getOriginalValue(chart, country) {
+        // Find original data array for this chart
+        let originalData;
+        switch(chart.canvas.id) {
+          case 'chart1': originalData = data1; break;
+          case 'chart2': originalData = data2; break;
+          case 'chart3': originalData = data3; break;
+          case 'chart4': originalData = data4; break;
+          case 'chart5': originalData = data5; break;
+          case 'chart6': originalData = data6; break;
+          default: originalData = [];
+        }
+        const item = originalData.find(d => d.country === country);
+        return item ? item.value : 0;
+      }
+    }
+
+    // Create legends
+    createLegend('legend-group1', countriesGroup1, colorsGroup1, [chart1, chart2, chart3]);
+    createLegend('legend-group2', countriesGroup2, colorsGroup2, [chart4, chart5, chart6]);
+
+</script>
+
+<!--End Start Leading-->
+
+
+
+<!--Start Clinical Extent-->
+  <!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Chart.js Data Labels plugin -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+
+ <script>
+        // Register the datalabels plugin globally
+        Chart.register(ChartDataLabels);
+
+        // Your data array
+        var lungdata = [
+          {
+              "year": "Localised",
+              "20-39": 3.85,
+              "40-59": 3.56,
+              "60+": 4.79
+          },
+          {
+              "year": "Regional",
+              "20-39": 22.31,
+              "40-59": 25.01,
+              "60+": 32.34
+          },
+          {
+              "year": "Distant mets",
+              "20-39": 73.59,
+              "40-59": 70.92,
+              "60+": 62.46
+          },
+          {
+              "year": "Unstaged",
+              "20-39": 0.26,
+              "40-59": 0.52,
+              "60+": 0.40
+          }
+        ];
+        var prostatedata = [
+         {
+             "year": "Localised",
+             "20-39": 0.00,
+             "40-59": 19.24,
+             "60+": 22.86,
+         }, {
+             "year": "Regional",
+             "20-39": 0.00,
+             "40-59": 16.55,
+             "60+": 25.54,
+         },
+     {
+         "year": "Distant",
+         "20-39": 100.00,
+         "40-59": 59.96,
+         "60+": 50.49,
+     },
+     {
+         "year": "Unstaged",
+         "20-39": 0.00,
+         "40-59": 4.25,
+         "60+": 1.11,
+     }
+        ];
+        var bmdata = [{
+            "year": "Localised",
+            "20-39": 19.71
+    , "40-59": 19.55
+    , "60+": 22.56
+
+    ,
+
+        }, {
+            "year": "Regional",
+            "20-39": 78.13
+
+    , "40-59": 78.47
+
+    , "60+": 74.36
+
+
+    ,
+
+        }, {
+            "year": "Distant",
+            "20-39": 1.38
+
+    , "40-59": 1.44
+
+    , "60+": 1.31
+
+
+    ,
+
+        }, {
+            "year": "Unstaged",
+            "20-39": 0.77
+
+    , "40-59": 0.53
+
+    , "60+": 1.77
+
+    ,
+
+        }]
+        var stomachdata = [{
+            "year": "Localised",
+            "20-39": 7.62
+
+    , "40-59": 8.61
+
+    , "60+": 9.58
+
+
+    ,
+
+        }, {
+            "year": "Regional",
+            "20-39": 36.66
+
+
+    , "40-59": 41.15
+
+
+    , "60+": 45.42
+
+
+
+    ,
+
+        }, {
+            "year": "Distant",
+            "20-39": 55.13
+
+
+    , "40-59": 49.68
+
+
+    , "60+": 44.43
+
+
+
+    ,
+
+        }, {
+            "year": "Unstaged",
+            "20-39": 0.59
+
+
+    , "40-59": 0.55
+
+
+    , "60+": 0.58
+
+
+    ,
+
+        }]
+        var Oesophagusdata = [{
+            "year": "Localised",
+            "20-39": 9.68
+
+
+, "40-59": 8.00
+
+
+, "60+": 10.27
+
+
+
+,
+
+        }, {
+            "year": "Regional",
+            "20-39": 59.68
+
+
+
+, "40-59": 66.06
+
+
+
+, "60+": 64.83
+
+
+
+
+,
+
+        }, {
+            "year": "Distant",
+            "20-39": 29.84
+
+
+
+, "40-59": 25.07
+
+
+
+, "60+": 24.16
+
+
+
+
+,
+
+        }, {
+            "year": "Unstaged",
+            "20-39": 0.81
+
+
+
+, "40-59": 0.87
+
+
+
+, "60+": 0.74
+
+
+
+,
+
+        }]
+
+
+        var Breastdata = [{
+            "year": "Localised",
+            "20-39": 19.02
+,
+            "40-59": 23.01
+,
+            "60+": 27.27
+
+,
+
+        }, {
+            "year": "Regional",
+            "20-39": 57.68
+
+,
+            "40-59": 55.72
+
+,
+            "60+": 52.00
+,
+
+        }, {
+            "year": "Distant",
+            "20-39": 23.04
+,
+            "40-59": 21.09
+,
+            "60+": 20.74
+,
+
+        }, {
+            "year": "Unstaged",
+            "20-39": 0.26
+,
+            "40-59": 0.18
+,
+            "60+": 0.00
+,
+
+        }]
+        var Cervixdata = [{
+            "year": "Localised",
+            "20-39": 18.48
+, "40-59": 12.89
+, "60+": 12.13
+
+,
+
+        }, {
+            "year": "Regional",
+            "20-39": 67.93
+
+, "40-59": 74.04
+
+, "60+": 73.92
+
+
+,
+
+        }, {
+            "year": "Distant",
+            "20-39": 13.32
+
+, "40-59": 12.79
+
+, "60+": 13.55
+
+
+,
+
+        }, {
+            "year": "Unstaged",
+            "20-39": 0.27
+
+, "40-59": 0.28
+
+, "60+": 0.41
+
+,
+
+        }]
+        var Lungfdata = [{
+            "year": "Localised",
+            "20-39": 6.56
+
+, "40-59": 4.07
+
+, "60+": 3.51
+
+
+,
+
+        }, {
+            "year": "Regional",
+            "20-39": 21.24
+
+
+, "40-59": 15.74
+
+
+, "60+": 20.93
+
+
+
+,
+
+        }, {
+            "year": "Distant",
+            "20-39": 71.43
+
+
+, "40-59": 79.90
+
+
+, "60+": 75.15
+
+
+
+,
+
+        }, {
+            "year": "Unstaged",
+            "20-39": 0.77
+
+
+, "40-59": 0.30
+
+
+, "60+": 0.41
+
+
+,
+
+        }]
+        var gbdata = [{
+            "year": "Localised",
+            "20-39": 4.32
+
+
+, "40-59": 3.16
+
+
+, "60+": 4.98
+
+
+
+,
+
+        }, {
+            "year": "Regional",
+            "20-39": 23.92
+
+
+
+, "40-59": 25.86
+
+
+
+, "60+": 29.25
+
+
+
+
+,
+
+        }, {
+            "year": "Distant",
+            "20-39": 71.76
+
+
+
+, "40-59": 70.88
+
+
+
+, "60+": 65.78
+
+
+
+
+,
+
+        }, {
+            "year": "Unstaged",
+            "20-39": 0.00
+
+
+
+, "40-59": 0.11
+
+
+
+, "60+": 0.00
+
+
+
+,
+
+        }]
+        var Ovarydata = [{
+            "year": "Localised",
+            "20-39": 17.13
+
+
+
+, "40-59": 7.38
+
+
+
+, "60+": 5.23
+
+
+
+
+,
+
+        }, {
+            "year": "Regional",
+            "20-39": 24.30
+
+
+
+
+, "40-59": 21.01
+
+
+
+
+, "60+": 15.85
+
+
+
+
+
+,
+
+        }, {
+            "year": "Distant",
+            "20-39": 58.57
+
+
+
+
+, "40-59": 71.54
+
+
+
+
+, "60+": 78.76
+
+
+
+
+
+,
+
+        }, {
+            "year": "Unstaged",
+            "20-39": 0.00
+
+
+
+
+, "40-59": 0.07
+
+
+
+
+, "60+": 0.16
+
+
+
+
+,
+
+        }]
+
+        // Extract labels (years)
+        const labels = lungdata.map(item => item.year);
+
+        // Extract datasets for each age group
+        const lungdatas = [
+            {
+                label: '20-39',
+                data: lungdata.map(item => item["20-39"]),
+                backgroundColor: '#0000c0', // pink
+            },
+            {
+                label: '40-59',
+                data: lungdata.map(item => item["40-59"]),
+                backgroundColor: '#008000', // blue
+            },
+            {
+                label: '60+',
+                data: lungdata.map(item => item["60+"]),
+                backgroundColor: '#ff0000', // greenish
+            }
+        ];
+        const prostatedatas = [
+              {
+                  label: '20-39',
+                  data: prostatedata.map(item => item["20-39"]),
+                  backgroundColor: '#0000c0', // pink
+              },
+              {
+                  label: '40-59',
+                  data: prostatedata.map(item => item["40-59"]),
+                  backgroundColor: '#008000', // blue
+              },
+              {
+                  label: '60+',
+                  data: prostatedata.map(item => item["60+"]),
+                  backgroundColor: '#ff0000', // greenish
+              }
+        ];
+        const bmdatas = [
+              {
+                  label: '20-39',
+                  data: bmdata.map(item => item["20-39"]),
+                  backgroundColor: '#0000c0', // pink
+              },
+              {
+                  label: '40-59',
+                  data: bmdata.map(item => item["40-59"]),
+                  backgroundColor: '#008000', // blue
+              },
+              {
+                  label: '60+',
+                  data: bmdata.map(item => item["60+"]),
+                  backgroundColor: '#ff0000', // greenish
+              }
+        ];
+        const stomachdatas = [
+             {
+                 label: '20-39',
+                 data: stomachdata.map(item => item["20-39"]),
+                 backgroundColor: '#0000c0', // pink
+             },
+             {
+                 label: '40-59',
+                 data: stomachdata.map(item => item["40-59"]),
+                 backgroundColor: '#008000', // blue
+             },
+             {
+                 label: '60+',
+                 data: stomachdata.map(item => item["60+"]),
+                 backgroundColor: '#ff0000', // greenish
+             }
+        ];
+        const Oesophagusdatas = [
+             {
+                 label: '20-39',
+                 data: Oesophagusdata.map(item => item["20-39"]),
+                 backgroundColor: '#0000c0', // pink
+             },
+             {
+                 label: '40-59',
+                 data: Oesophagusdata.map(item => item["40-59"]),
+                 backgroundColor: '#008000', // blue
+             },
+             {
+                 label: '60+',
+                 data: Oesophagusdata.map(item => item["60+"]),
+                 backgroundColor: '#ff0000', // greenish
+             }
+        ];
+
+        const Breastdatas = [
+             {
+                 label: '20-39',
+                 data: Breastdata.map(item => item["20-39"]),
+                 backgroundColor: '#0000c0', // pink
+             },
+             {
+                 label: '40-59',
+                 data: Breastdata.map(item => item["40-59"]),
+                 backgroundColor: '#008000', // blue
+             },
+             {
+                 label: '60+',
+                 data: Breastdata.map(item => item["60+"]),
+                 backgroundColor: '#ff0000', // greenish
+             }
+        ];
+        const Cervixdatas = [
+            {
+                label: '20-39',
+                data: Cervixdata.map(item => item["20-39"]),
+                backgroundColor: '#0000c0', // pink
+            },
+            {
+                label: '40-59',
+                data: Cervixdata.map(item => item["40-59"]),
+                backgroundColor: '#008000', // blue
+            },
+            {
+                label: '60+',
+                data: Cervixdata.map(item => item["60+"]),
+                backgroundColor: '#ff0000', // greenish
+            }
+        ];
+        const Lungfdatas = [
+           {
+               label: '20-39',
+               data: Lungfdata.map(item => item["20-39"]),
+               backgroundColor: '#0000c0', // pink
+           },
+           {
+               label: '40-59',
+               data: Lungfdata.map(item => item["40-59"]),
+               backgroundColor: '#008000', // blue
+           },
+           {
+               label: '60+',
+               data: Lungfdata.map(item => item["60+"]),
+               backgroundColor: '#ff0000', // greenish
+           }
+        ];
+        const gbdatas = [
+           {
+               label: '20-39',
+               data: gbdata.map(item => item["20-39"]),
+               backgroundColor: '#0000c0', // pink
+           },
+           {
+               label: '40-59',
+               data: gbdata.map(item => item["40-59"]),
+               backgroundColor: '#008000', // blue
+           },
+           {
+               label: '60+',
+               data: gbdata.map(item => item["60+"]),
+               backgroundColor: '#ff0000', // greenish
+           }
+        ];
+        const Ovarydatas = [
+          {
+              label: '20-39',
+              data: Ovarydata.map(item => item["20-39"]),
+              backgroundColor: '#0000c0', // pink
+          },
+          {
+              label: '40-59',
+              data: Ovarydata.map(item => item["40-59"]),
+              backgroundColor: '#008000', // blue
+          },
+          {
+              label: '60+',
+              data: Ovarydata.map(item => item["60+"]),
+              backgroundColor: '#ff0000', // greenish
+          }
+        ];
+
+
+        function createlungChartConfig() {
+            return {
+                type: 'bar',
+
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(lungdatas)), // deep copy
+                    color: '#000000',
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 105,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            };
+        }
+        function createprostateChartConfigs() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(prostatedatas)) // deep copy
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'end',
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 105,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            };
+        }
+        function createbmChartConfigs() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(bmdatas)) // deep copy
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            //offset: -6,
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            clip: true,
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 100,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+
+                plugins: [ChartDataLabels]
+            };
+        }
+        function createstomachChartConfigs() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(stomachdatas)) // deep copy
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            //offset: -6,
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            clip: true,
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 70,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+
+                plugins: [ChartDataLabels]
+            };
+        }
+        function createOesophagusChartConfigs() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(Oesophagusdatas)) // deep copy
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            //offset: -6,
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            clip: true,
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 80,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+
+                plugins: [ChartDataLabels]
+            };
+        }
+
+        function createBreastChartConfigs() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(Breastdatas)) // deep copy
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            //offset: -6,
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            clip: true,
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 80,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+
+                plugins: [ChartDataLabels]
+            };
+        }
+        function createCervixChartConfigs() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(Cervixdatas)) // deep copy
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            //offset: -6,
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            clip: true,
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 80,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+
+                plugins: [ChartDataLabels]
+            };
+        }
+        function createLungfChartConfigs() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(Lungfdatas)) // deep copy
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            //offset: -6,
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            clip: true,
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 90,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+
+                plugins: [ChartDataLabels]
+            };
+        }
+        function creategbChartConfigs() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(gbdatas)) // deep copy
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            //offset: -6,
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            clip: true,
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 90,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+
+                plugins: [ChartDataLabels]
+            };
+        }
+        function createOvaryChartConfigs() {
+            return {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: JSON.parse(JSON.stringify(Ovarydatas)) // deep copy
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false // hide default legend
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            //offset: -6,
+                            color: '#000000',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            clip: true,
+                            formatter: function (value) {
+                                return value;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#000000',
+                                font: {
+                                    weight: 'bold',
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 90,  // ?? ensures space above tall bars
+                            ticks: {
+                                color: '#000000'
+                            }
+                        }
+                    }
+                },
+
+                plugins: [ChartDataLabels]
+            };
+        }
+
+
+        // Create charts
+        const LungchartCE1 = new Chart(
+            document.getElementById('LungchartCE1'),
+            createlungChartConfig()
+        );
+
+        const ProstatechartCE2 = new Chart(
+            document.getElementById('ProstatechartCE2'),
+            createprostateChartConfigs()
+        );
+        const bmchartCE3 = new Chart(
+           document.getElementById('bmchartCE3'),
+           createbmChartConfigs()
+       );
+        const stomachchartCE4 = new Chart(
+           document.getElementById('stomachchartCE4'),
+           createstomachChartConfigs()
+       );
+        const OesophaguschartCE5 = new Chart(
+          document.getElementById('OesophaguschartCE5'),
+          createOesophagusChartConfigs()
+      );
+
+        const BreastchartCE1 = new Chart(
+         document.getElementById('BreastchartCE1'),
+         createBreastChartConfigs()
+     );
+        const CervixchartCE2 = new Chart(
+         document.getElementById('CervixchartCE2'),
+         createCervixChartConfigs()
+     );
+        const LungfchartCE3 = new Chart(
+        document.getElementById('LungfchartCE3'),
+        createLungfChartConfigs()
+    );
+        const gbchartCE4 = new Chart(
+       document.getElementById('gbchartCE4'),
+       creategbChartConfigs()
+   );
+        const OvarychartCE5 = new Chart(
+       document.getElementById('OvarychartCE5'),
+       createOvaryChartConfigs()
+   );
+
+        // Shared legend click handler
+        const legendItems = document.querySelectorAll('#shared-legend .legend-item');
+
+        legendItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const index = parseInt(this.getAttribute('data-index'));
+
+                // Toggle visibility in chart1
+                const meta1 = LungchartCE1.getDatasetMeta(index);
+                meta1.hidden = meta1.hidden === null ? true : !meta1.hidden;
+                LungchartCE1.update();
+
+                // Toggle visibility in chart2
+                const meta2 = ProstatechartCE2.getDatasetMeta(index);
+                meta2.hidden = meta2.hidden === null ? true : !meta2.hidden;
+                ProstatechartCE2.update();
+
+                // Toggle visibility in chart3
+                const meta3 = bmchartCE3.getDatasetMeta(index);
+                meta3.hidden = meta3.hidden === null ? true : !meta3.hidden;
+                bmchartCE3.update();
+                // Toggle visibility in chart4
+                const meta4 = stomachchartCE4.getDatasetMeta(index);
+                meta4.hidden = meta4.hidden === null ? true : !meta4.hidden;
+                stomachchartCE4.update();
+                // Toggle visibility in chart4
+                const meta5 = OesophaguschartCE5.getDatasetMeta(index);
+                meta5.hidden = meta5.hidden === null ? true : !meta5.hidden;
+                OesophaguschartCE5.update();
+                // Toggle visibility in chart4
+                const meta6 = BreastchartCE1.getDatasetMeta(index);
+                meta6.hidden = meta6.hidden === null ? true : !meta6.hidden;
+                BreastchartCE1.update();
+                // Toggle visibility in chart4
+                const meta7 = CervixchartCE2.getDatasetMeta(index);
+                meta7.hidden = meta7.hidden === null ? true : !meta7.hidden;
+                CervixchartCE2.update();
+                // Toggle visibility in chart4
+                const meta8 = LungfchartCE3.getDatasetMeta(index);
+                meta8.hidden = meta8.hidden === null ? true : !meta8.hidden;
+                LungfchartCE3.update();
+                // Toggle visibility in chart4
+                const meta9 = gbchartCE4.getDatasetMeta(index);
+                meta9.hidden = meta9.hidden === null ? true : !meta9.hidden;
+                gbchartCE4.update();
+                // Toggle visibility in chart4
+                const meta10 = OvarychartCE5.getDatasetMeta(index);
+                meta10.hidden = meta10.hidden === null ? true : !meta10.hidden;
+                OvarychartCE5.update();
+
+
+                // Toggle legend item style (opacity and line-through)
+                if (meta1.hidden) {
+                    this.style.opacity = 0.5;
+                    this.style.textDecoration = 'line-through';
+                } else {
+                    this.style.opacity = 1;
+                    this.style.textDecoration = 'none';
+                }
+            });
+        });
+</script>
+
+
+<!--End Clinical Extent-->
+
+<!--Start Treatment-->
+<script>
+const dataSets = [
+  [{
+    "year": "Lung",
+    "Complete Treatment": 67.18,
+    "No Treatment": 16.67,
+    "Advised not taken": 6.92,
+    "Partial Treatment": 9.23
+  }, {
+    "year": "Prostate",
+    "Complete Treatment": 66.67,
+    "No Treatment": 0.00,
+    "Advised not taken": 0.00,
+    "Partial Treatment": 33.33
+  }, {
+    "year": "Buccal Mucosa",
+    "Complete Treatment": 43.60,
+    "No Treatment": 17.55,
+    "Advised not taken": 30.02,
+    "Partial Treatment": 8.83
+  }, {
+    "year": "Stomach",
+    "Complete Treatment": 58.36,
+    "No Treatment": 20.82,
+    "Advised not taken": 11.14,
+    "Partial Treatment": 9.68
+  }, {
+    "year": "Oesophagus",
+    "Complete Treatment": 63.71,
+    "No Treatment": 16.94,
+    "Advised not taken": 12.10,
+    "Partial Treatment": 7.26
+  }],
+  [{
+    "year": "Lung",
+    "Complete Treatment": 59.14,
+    "No Treatment": 17.53,
+    "Advised not taken": 11.03,
+    "Partial Treatment": 12.30
+  }, {
+    "year": "Prostate",
+    "Complete Treatment": 74.77,
+    "No Treatment": 10.98,
+    "Advised not taken": 7.01,
+    "Partial Treatment": 7.24
+  }, {
+    "year": "Buccal Mucosa",
+    "Complete Treatment": 46.19,
+    "No Treatment": 16.51,
+    "Advised not taken": 29.79,
+    "Partial Treatment": 7.51
+  }, {
+    "year": "Stomach",
+    "Complete Treatment": 55.68,
+    "No Treatment": 20.43,
+    "Advised not taken": 13.25,
+    "Partial Treatment": 10.65
+  }, {
+    "year": "Oesophagus",
+    "Complete Treatment": 56.96,
+    "No Treatment": 17.10,
+    "Advised not taken": 15.18,
+    "Partial Treatment": 10.76
+  }],
+  [{
+    "year": "Lung",
+    "Complete Treatment": 47.50,
+    "No Treatment": 21.57,
+    "Advised not taken": 13.95,
+    "Partial Treatment": 16.98
+  }, {
+    "year": "Prostate",
+    "Complete Treatment": 67.89,
+    "No Treatment": 16.17,
+    "Advised not taken": 7.97,
+    "Partial Treatment": 7.97
+  }, {
+    "year": "Buccal Mucosa",
+    "Complete Treatment": 38.80,
+    "No Treatment": 20.25,
+    "Advised not taken": 33.18,
+    "Partial Treatment": 7.78
+  }, {
+    "year": "Stomach",
+    "Complete Treatment": 44.76,
+    "No Treatment": 27.99,
+    "Advised not taken": 15.77,
+    "Partial Treatment": 11.48
+  }, {
+    "year": "Oesophagus",
+    "Complete Treatment": 43.63,
+    "No Treatment": 22.27,
+    "Advised not taken": 22.93,
+    "Partial Treatment": 11.18
+  }],
+  [{
+    "year": "Breast",
+    "Complete Treatment": 73.22,
+    "No Treatment": 9.53,
+    "Advised not taken": 3.00,
+    "Partial Treatment": 14.25
+  }, {
+    "year": "Cervix",
+    "Complete Treatment": 67.39,
+    "No Treatment": 12.77,
+    "Advised not taken": 14.95,
+    "Partial Treatment": 4.89
+  }, {
+    "year": "Lung",
+    "Complete Treatment": 65.64,
+    "No Treatment": 18.15,
+    "Advised not taken": 5.41,
+    "Partial Treatment": 10.81
+  }, {
+    "year": "Gall Bladder",
+    "Complete Treatment": 42.65,
+    "No Treatment": 34.87,
+    "Advised not taken": 16.14,
+    "Partial Treatment": 6.34
+  }, {
+    "year": "Ovary",
+    "Complete Treatment": 84.11,
+    "No Treatment": 8.10,
+    "Advised not taken": 1.56,
+    "Partial Treatment": 6.23
+  }],
+  [{
+    "year": "Breast",
+    "Complete Treatment": 70.81,
+    "No Treatment": 9.81,
+    "Advised not taken": 4.58,
+    "Partial Treatment": 14.81
+  }, {
+    "year": "Cervix",
+    "Complete Treatment": 65.87,
+    "No Treatment": 10.65,
+    "Advised not taken": 16.54,
+    "Partial Treatment": 6.94
+  }, {
+    "year": "Lung",
+    "Complete Treatment": 64.38,
+    "No Treatment": 14.71,
+    "Advised not taken": 9.39,
+    "Partial Treatment": 11.53
+  }, {
+    "year": "Gall Bladder",
+    "Complete Treatment": 37.16,
+    "No Treatment": 36.00,
+    "Advised not taken": 16.26,
+    "Partial Treatment": 10.58
+  }, {
+    "year": "Ovary",
+    "Complete Treatment": 81.46,
+    "No Treatment": 5.18,
+    "Advised not taken": 5.33,
+    "Partial Treatment": 8.03
+  }],
+  [{
+    "year": "Breast",
+    "Complete Treatment": 63.70,
+    "No Treatment": 13.46,
+    "Advised not taken": 6.60,
+    "Partial Treatment": 16.24
+  }, {
+    "year": "Cervix",
+    "Complete Treatment": 54.74,
+    "No Treatment": 15.45,
+    "Advised not taken": 23.37,
+    "Partial Treatment": 6.44
+  }, {
+    "year": "Lung",
+    "Complete Treatment": 55.15,
+    "No Treatment": 20.10,
+    "Advised not taken": 11.86,
+    "Partial Treatment": 12.89
+  }, {
+    "year": "Gall Bladder",
+    "Complete Treatment": 28.16,
+    "No Treatment": 41.99,
+    "Advised not taken": 19.90,
+    "Partial Treatment": 9.95
+  }, {
+    "year": "Ovary",
+    "Complete Treatment": 71.47,
+    "No Treatment": 10.78,
+    "Advised not taken": 7.45,
+    "Partial Treatment": 10.30
+  }]
+];
+
+const treatments = ["Complete Treatment", "Partial Treatment", "Advised not taken", "No Treatment"];
+const treatmentColors = {
+    "Complete Treatment": "#1769aa", // teal
+    "Partial Treatment": "#d500f9"  , // blue
+       
+    "Advised not taken": "#00a152",  // yellow
+    "No Treatment": "#ff6d00"   // blue
+};
+
+// Helper to get data array for a treatment in a dataset
+function getTreatmentData(dataset, treatment) {
+  return dataset.map(d => d[treatment] || 0);
+}
+
+// Plugin to show values on bars
+const valueLabelPlugin = {
+  id: 'valueLabelPlugin',
+  afterDatasetsDraw(chart) {
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.font = '16px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+
+    chart.data.datasets.forEach((dataset, i) => {
+      if (dataset.hidden) return; // skip hidden datasets
+      const meta = chart.getDatasetMeta(i);
+      meta.data.forEach((bar, index) => {
+        const value = dataset.data[index];
+        if (value === 0) return; // skip zero values
+
+        const barHeight = bar.base - bar.y;
+        const x = bar.x;
+        let y = bar.y;
+
+          // If bar is tall enough, draw label inside bar, else above bar
+        if (barHeight > 18) {
+            ctx.fillStyle = 'white'; // white text inside bar for contrast
+            y += barHeight / 2;
+        } else {
+            ctx.fillStyle = 'black';
+            y -= 8; // above the bar
+        }
+          // Prevent text clipping on top edge
+        if (y < 10) y = 10;
+        ctx.fillText(value.toFixed(1), x, y);
+
+      });
+    });
+  }
+};
+
+// Create charts and legends
+const chartsGroup1 = [];
+const chartsGroup2 = [];
+
+function createChart(ctx, dataset) {
+  const chartDatasets = treatments.map(treatment => ({
+    label: treatment,
+    data: getTreatmentData(dataset, treatment),
+    backgroundColor: treatmentColors[treatment],
+    stack: "stack1"
+  }));
+
+  return new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: dataset.map(d => d.year),
+      datasets: chartDatasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }, // hide individual legends
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: ctx => {
+              return ctx.dataset.label + ": " + ctx.parsed.y.toFixed(2) + "%";
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          title: {
+            display: true,
+            //text: "Cancer Type"
+          },
+          ticks: {
+              color: "black"   // ? labels (field names) color
+          },
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          max: 100,
+          title: {
+            display: true,
+            text: "Percentage (%)"
+          },
+          ticks: {
+            callback: val => val + "%"
+          }
+        }
+      }
+    },
+    plugins: [valueLabelPlugin]
+  });
+}
+
+// Create charts for group 1 (charts 1-3)
+for (let i = 0; i < 3; i++) {
+  const ctx = document.getElementById("chartt" + (i + 1)).getContext("2d");
+  chartsGroup1.push(createChart(ctx, dataSets[i]));
+}
+
+// Create charts for group 2 (charts 4-6)
+for (let i = 3; i < 6; i++) {
+  const ctx = document.getElementById("chartt" + (i + 1)).getContext("2d");
+  chartsGroup2.push(createChart(ctx, dataSets[i]));
+}
+
+// Create legends
+function createLegend(containerId, chartsGroup) {
+  const container = document.getElementById(containerId);
+  const treatmentVisibility = {};
+  treatments.forEach(t => treatmentVisibility[t] = true);
+
+  treatments.forEach(treatment => {
+    const span = document.createElement("span");
+    span.textContent = treatment;
+    span.style.backgroundColor = treatmentColors[treatment];
+    span.dataset.treatment = treatment;
+    span.style.cursor = "pointer";
+    span.style.display = "inline-block";
+    span.style.margin = "0 10px";
+    span.style.padding = "6px 12px";
+    span.style.borderRadius = "4px";
+    span.style.color = "white";
+    span.style.userSelect = "none";
+    span.style.fontWeight = "bold";
+    span.dataset.treatment = treatment;
+    span.classList.add("legend-item");
+    container.appendChild(span);
+  });
+
+  container.addEventListener("click", e => {
+    if (!e.target.classList.contains("legend-item")) return;
+
+    const treatment = e.target.dataset.treatment;
+    treatmentVisibility[treatment] = !treatmentVisibility[treatment];
+
+    if (treatmentVisibility[treatment]) {
+        e.target.classList.remove("hidden");
+        e.target.style.opacity = "1";
+        e.target.style.textDecoration = "none";
+    } else {
+        e.target.classList.add("hidden");
+        e.target.style.opacity = "0.4";
+        e.target.style.textDecoration = "line-through";
+    }
+
+    chartsGroup.forEach(chart => {
+      chart.data.datasets.forEach(dataset => {
+        if (dataset.label === treatment) {
+          dataset.hidden = !treatmentVisibility[treatment];
+        }
+      });
+      chart.update();
+    });
+  });
+}
+
+createLegend("legend1", chartsGroup1);
+createLegend("legend2", chartsGroup2);
+</script>
+
+<!--End Treatment-->
+
+
+
+
+
+
