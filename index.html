@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 
 <html>
@@ -229,7 +228,7 @@
 
 
 
-@@keyframes name-activated {
+@keyframes name-activated {
   from {
     background-color: #70c489;
     font-weight: 400;
@@ -253,7 +252,7 @@
   z-index: 0;
 }
 
-@@keyframes name-border-activated {
+@keyframes name-border-activated {
   from {
     opacity: 0;
   }
@@ -276,7 +275,7 @@
   animation-fill-mode: forwards;
 }
 
-@@keyframes name-text-activated {
+@keyframes name-text-activated {
   from {
     background-color: #70c489;
   }
@@ -319,7 +318,7 @@
 }
  
 
-@@keyframes content-activated {
+@keyframes content-activated {
   from {
     opacity: 0;
   }
@@ -2679,7 +2678,7 @@ createLegend("legend2", chartsGroup2);
                 // Click event to toggle dataset visibility in both charts
                 itemM.addEventListener('click', () => {
                     visibilityStateM[i] = !visibilityStateM[i];
-                    updateDatasetVisibility(i, visibilityStateM[i]);
+                    updateMaleDatasetVisibility(i, visibilityStateM[i]);
                     itemM.classList.toggle('disabled', !visibilityStateM[i]);
                 });
             });
@@ -3655,7 +3654,7 @@ createLegend("legend2", chartsGroup2);
 
 
             // Function to toggle dataset visibility in both charts
-            function updateDatasetVisibility(datasetIndex, visible) {
+            function updateMaleDatasetVisibility(datasetIndex, visible) {
                 buccalChart.data.datasets[datasetIndex].hidden = !visible;
                 buccalChart.update();
 
