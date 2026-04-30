@@ -1,4 +1,7 @@
 
+@{
+    Layout = null;
+}
 
 <!DOCTYPE html>
 
@@ -7,7 +10,8 @@
    
     <meta name="viewport" content="width=device-width" />
     <title>analysis</title>
-  
+    @*<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>*@
+    @*<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>*@
     <!-- Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 
@@ -224,11 +228,15 @@
   animation-fill-mode: forwards;
 }
 
+.legend-itemt { cursor:pointer; display:inline-block; margin:0 6px; padding:5px 11px; border-radius:4px; color:#fff; font-weight:500; font-size:18px; user-select:none; }
+.legend-item.hidden { opacity:0.4; text-decoration:line-through; }
+.section-title { text-align:center; font-size:18px; font-weight:500; color:var(--color-text-primary); margin:24px 0 8px; border-bottom:1px solid var(--color-border-tertiary); padding-bottom:6px; }
+.legend-row { text-align:center; margin-bottom:12px; }
+.chart-wrap { position:relative; width:100%; }
 
 
 
-
-@keyframes name-activated {
+@@keyframes name-activated {
   from {
     background-color: #70c489;
     font-weight: 400;
@@ -252,7 +260,7 @@
   z-index: 0;
 }
 
-@keyframes name-border-activated {
+@@keyframes name-border-activated {
   from {
     opacity: 0;
   }
@@ -275,7 +283,7 @@
   animation-fill-mode: forwards;
 }
 
-@keyframes name-text-activated {
+@@keyframes name-text-activated {
   from {
     background-color: #70c489;
   }
@@ -318,7 +326,7 @@
 }
  
 
-@keyframes content-activated {
+@@keyframes content-activated {
   from {
     opacity: 0;
   }
@@ -334,7 +342,7 @@
     </style>
 </head>
 <body>
-    <!-- From Uiverse.io by german_7619 -->
+    
     <div class="radio-inputs">
         <label class="radio">
             <input type="radio" name="radio" checked="" />
@@ -366,6 +374,8 @@
                 </div>
             </div>
         </label>
+        @*Clinical Extent*@
+
         <label class="radio">
             <input type="radio" name="radio" />
             <span class="name">
@@ -376,9 +386,9 @@
             <div class="content">
                 <!-- Shared Legend -->
                 <div id="shared-legend">
-                    <span class="legend-item" data-index="0" style="cursor:pointer;font-size:20px; padding:5px 10px; background-color:#0000c0;color:#ffffff; margin-right:10px; border-radius:4px;">20-39</span>
-                    <span class="legend-item" data-index="1" style="cursor:pointer;font-size:20px; padding:5px 10px; background-color:#008000;color:#ffffff; margin-right:10px; border-radius:4px;">40-59</span>
-                    <span class="legend-item" data-index="2" style="cursor:pointer;font-size:20px; padding:5px 10px; background-color:#ff0000;color:#ffffff; border-radius:4px;">60+</span>
+                    <span class="legend-item" data-index="0" style="cursor:pointer;font-size:20px; padding:5px 10px; background-color:#0000c0;color:#ffffff; margin-right:10px; border-radius:4px;">20-59</span>
+                    @*<span class="legend-item" data-index="1" style="cursor:pointer;font-size:20px; padding:5px 10px; background-color:#008000;color:#ffffff; margin-right:10px; border-radius:4px;">40-59</span>*@
+                    <span class="legend-item" data-index="1" style="cursor:pointer;font-size:20px; padding:5px 10px; background-color:#ff0000;color:#ffffff; border-radius:4px;">60+</span>
                 </div>
 
                 <h1 style="color:white;text-align:center;background:#1769aa;">Male</h1>
@@ -397,7 +407,7 @@
                     </div>
 
                     <div style="width: 600px;">
-                        <h2 style="text-align:center">Buccal Mucosa</h2>
+                        <h2 style="text-align:center">Mouth</h2>
                         <canvas id="bmchartCE3" width="600" height="400"></canvas>
                     </div>
 
@@ -452,6 +462,8 @@
 
         </label>
 
+        @*Treatment*@
+
         <label class="radio">
             <input type="radio" name="radio" />
             <span class="name">
@@ -462,26 +474,29 @@
             <div class="content">
 
                 <h2 style="text-align:center;">Male</h2>
-                <div id="legend1" style="text-align:center; margin-bottom:20px;"></div>
+                <div id="legend1" style="text-align:center; margin-bottom:20px; "></div>
 
-                <div style="display:flex; gap:30px; justify-content:center;" id="group1">
-                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">20-39</div><canvas id="chartt1"></canvas></div>
-                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">40-59</div><canvas id="chartt2"></canvas> </div>
-                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">60+</div>  <canvas id="chartt3"></canvas></div>
+                
+                <div class="legend-row" id="legend1"></div>
+                <div class="chart-wrap" style="height:560px; width:1500px">
+                    <canvas id="c1" role="img" aria-label="Male cancer treatment"></canvas>
                 </div>
+
 
                 <h2 style="text-align:center;margin-top:40px;">Female</h2>
                 <div id="legend2" style="text-align:center; margin-bottom:20px;"></div>
 
-                <div style="display:flex;  gap:30px; justify-content:center;" id="group2">
-                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">20-39</div><canvas id="chartt4"></canvas> </div>
-                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">40-59</div><canvas id="chartt5"></canvas></div>
-                    <div style="width:600px; height:650px;"><div style="font-weight: bold;font-size: 18px;margin-bottom: 8px;text-align: center;width: 100%;">60+</div>  <canvas id="chartt6"></canvas></div>
+
+               
+                <div class="legend-row" id="legend2"></div>
+                <div class="chart-wrap" style="height:560px;width:1500px">
+                    <canvas id="c2" role="img" aria-label="Female cancer treatment"></canvas>
                 </div>
 
             </div>
         </label>
 
+        @*Male modality*@
         <label class="radio">
             <input type="radio" name="radio" />
             <span class="name">
@@ -581,6 +596,7 @@
           
         </label>
 
+        @*Female modality*@
         <label class="radio">
             <input type="radio" name="radio" />
             <span class="name">
@@ -980,207 +996,161 @@
         var lungdata = [
           {
               "year": "Localised",
-              "20-39": 3.85,
-              "40-59": 3.56,
-              "60+": 4.79
+              "20-59": 3.56,
+             
+              "60+": 4.82
           },
           {
               "year": "Regional",
-              "20-39": 22.31,
-              "40-59": 25.01,
-              "60+": 32.34
+              "20-59": 24.88,
+            
+              "60+": 32.35
+
           },
           {
               "year": "Distant mets",
-              "20-39": 73.59,
-              "40-59": 70.92,
-              "60+": 62.46
+              "20-59": 71.30,
+             
+              "60+": 62.42
+
           },
           {
               "year": "Unstaged",
-              "20-39": 0.26,
-              "40-59": 0.52,
+              "20-59": 0.26,
+            
               "60+": 0.40
+
           }
         ];
         var prostatedata = [
          {
              "year": "Localised",
-             "20-39": 0.00,
-             "40-59": 19.24,
+             "20-59": 19.95,
+           
              "60+": 22.86,
          }, {
              "year": "Regional",
-             "20-39": 0.00,
-             "40-59": 16.55,
+             "20-59": 17.17,
+            
              "60+": 25.54,
          },
      {
          "year": "Distant",
-         "20-39": 100.00,
-         "40-59": 59.96,
+         "20-59": 62.88,
+       
          "60+": 50.49,
      },
      {
          "year": "Unstaged",
-         "20-39": 0.00,
-         "40-59": 4.25,
+         "20-59": 0.00,
+        
          "60+": 1.11,
      }
         ];
         var bmdata = [{
             "year": "Localised",
-            "20-39": 19.71
-    , "40-59": 19.55
-    , "60+": 22.56
+            "20-59": 19.13,
+           
+             "60+": 20.90 ,
 
-    ,
-
-        }, {
+        },
+        {
             "year": "Regional",
-            "20-39": 78.13
+            "20-59": 78.21,
+           
 
-    , "40-59": 78.47
+            "60+":75.95 ,
 
-    , "60+": 74.36
-
-
-    ,
-
-        }, {
+        },
+        {
             "year": "Distant",
-            "20-39": 1.38
+            "20-59": 1.61 , 
 
-    , "40-59": 1.44
+              "60+": 1.61,
 
-    , "60+": 1.31
-
-
-    ,
-
-        }, {
+        },
+        {
             "year": "Unstaged",
-            "20-39": 0.77
+            "20-59": 1.05,
+            "60+": 1.53
 
-    , "40-59": 0.53
-
-    , "60+": 1.77
-
-    ,
+    
 
         }]
         var stomachdata = [{
             "year": "Localised",
-            "20-39": 7.62
+            "20-59": 8.39
 
-    , "40-59": 8.61
-
-    , "60+": 9.58
+    , "60+": 9.59
 
 
-    ,
+
 
         }, {
             "year": "Regional",
-            "20-39": 36.66
+            "20-59": 40.12
+,
+            "60+": 45.45
 
+ ,
 
-    , "40-59": 41.15
-
-
-    , "60+": 45.42
-
-
-
-    ,
-
-        }, {
+        },
+        {
             "year": "Distant",
-            "20-39": 55.13
+            "20-59": 50.75
 
 
-    , "40-59": 49.68
+,
+            "60+": 44.38
 
 
-    , "60+": 44.43
 
 
-
-    ,
-
-        }, {
+        },
+        {
             "year": "Unstaged",
-            "20-39": 0.59
-
-
-    , "40-59": 0.55
+            "20-59": 0.75
 
 
     , "60+": 0.58
 
 
-    ,
+
 
         }]
         var Oesophagusdata = [{
             "year": "Localised",
-            "20-39": 9.68
-
-
-, "40-59": 8.00
-
+            "20-59": 8.15
 
 , "60+": 10.27
 
 
 
-,
-
         }, {
             "year": "Regional",
-            "20-39": 59.68
-
-
-
-, "40-59": 66.06
-
+            "20-59": 65.15
 
 
 , "60+": 64.83
 
 
 
-
-,
-
         }, {
             "year": "Distant",
-            "20-39": 29.84
+            "20-59": 25.49
 
 
+           , "60+": 24.16
 
-, "40-59": 25.07
-
-
-
-, "60+": 24.16
-
-
-
-
-,
 
         }, {
             "year": "Unstaged",
-            "20-39": 0.81
+            "20-59": 1.20
 
 
 
-, "40-59": 0.87
+            , "60+": 0.74
 
-
-
-, "60+": 0.74
 
 
 
@@ -1188,108 +1158,67 @@
 
         }]
 
-
+     //female 
         var Breastdata = [{
+
             "year": "Localised",
-            "20-39": 19.02
-,
-            "40-59": 23.01
-,
-            "60+": 27.27
-
-,
-
-        }, {
+            "20-59": 22.11,
+            "60+": 27.26,
+        },
+        {
             "year": "Regional",
-            "20-39": 57.68
-
-,
-            "40-59": 55.72
-
-,
-            "60+": 52.00
-,
-
-        }, {
+            "20-59": 56.15,          
+            "60+": 51.98,
+        },
+        {
             "year": "Distant",
-            "20-39": 23.04
-,
-            "40-59": 21.09
-,
-            "60+": 20.74
-,
-
-        }, {
+            "20-59": 21.53,
+            "60+": 20.76,
+        },
+        {
             "year": "Unstaged",
-            "20-39": 0.26
-,
-            "40-59": 0.18
-,
-            "60+": 0.00
-,
-
+            "20-59": 0.21,
+            "60+": 0.00,
         }]
         var Cervixdata = [{
             "year": "Localised",
-            "20-39": 18.48
-, "40-59": 12.89
-, "60+": 12.13
-
-,
-
-        }, {
+            "20-59": 13.53,
+            "60+": 12.14,
+        },
+        {
             "year": "Regional",
-            "20-39": 67.93
-
-, "40-59": 74.04
-
-, "60+": 73.92
-
-
-,
-
-        }, {
+            "20-59": 73.34,
+            "60+": 73.90,
+        },
+        {
             "year": "Distant",
-            "20-39": 13.32
-
-, "40-59": 12.79
-
-, "60+": 13.55
-
-
-,
-
-        }, {
+            "20-59": 12.85,
+            "60+": 13.56,
+        },
+        {
             "year": "Unstaged",
-            "20-39": 0.27
-
-, "40-59": 0.28
-
-, "60+": 0.41
-
-,
+            "20-59": 0.28,
+            "60+": 0.41,
 
         }]
         var Lungfdata = [{
             "year": "Localised",
-            "20-39": 6.56
+            "20-59": 4.63
 
-, "40-59": 4.07
 
-, "60+": 3.51
+, "60+": 3.50
 
 
 ,
 
         }, {
             "year": "Regional",
-            "20-39": 21.24
+            "20-59": 16.74
 
 
-, "40-59": 15.74
 
+, "60+": 21.09
 
-, "60+": 20.93
 
 
 
@@ -1297,13 +1226,12 @@
 
         }, {
             "year": "Distant",
-            "20-39": 71.43
+            "20-59": 78.26
 
 
-, "40-59": 79.90
 
+, "60+": 75.00
 
-, "60+": 75.15
 
 
 
@@ -1311,13 +1239,11 @@
 
         }, {
             "year": "Unstaged",
-            "20-39": 0.77
-
-
-, "40-59": 0.30
+            "20-59": 0.37
 
 
 , "60+": 0.41
+
 
 
 ,
@@ -1325,13 +1251,12 @@
         }]
         var gbdata = [{
             "year": "Localised",
-            "20-39": 4.32
+            "20-59": 5.75
 
 
-, "40-59": 3.16
 
+, "60+": 8.30
 
-, "60+": 4.98
 
 
 
@@ -1339,32 +1264,26 @@
 
         }, {
             "year": "Regional",
-            "20-39": 23.92
-
-
-
-, "40-59": 25.86
-
-
-
-, "60+": 29.25
+            "20-59": 28.14
 
 
 
 
-,
+
+, "60+": 33.20
+
+
+
 
         }, {
             "year": "Distant",
-            "20-39": 71.76
+            "20-59": 65.95
 
 
 
-, "40-59": 70.88
 
+, "60+": 58.40
 
-
-, "60+": 65.78
 
 
 
@@ -1373,15 +1292,12 @@
 
         }, {
             "year": "Unstaged",
-            "20-39": 0.00
+            "20-59": 0.16
 
 
 
-, "40-59": 0.11
+, "60+": 0.10
 
-
-
-, "60+": 0.00
 
 
 
@@ -1390,15 +1306,11 @@
         }]
         var Ovarydata = [{
             "year": "Localised",
-            "20-39": 17.13
-
-
-
-, "40-59": 7.38
-
+            "20-59": 9.14
 
 
 , "60+": 5.23
+
 
 
 
@@ -1407,12 +1319,8 @@
 
         }, {
             "year": "Regional",
-            "20-39": 24.30
+            "20-59": 21.63
 
-
-
-
-, "40-59": 21.01
 
 
 
@@ -1427,13 +1335,7 @@
 
         }, {
             "year": "Distant",
-            "20-39": 58.57
-
-
-
-
-, "40-59": 71.54
-
+            "20-59": 69.17
 
 
 
@@ -1443,17 +1345,12 @@
 
 
 
+
 ,
 
         }, {
             "year": "Unstaged",
-            "20-39": 0.00
-
-
-
-
-, "40-59": 0.07
-
+            "20-59": 0.06
 
 
 
@@ -1462,7 +1359,6 @@
 
 
 
-,
 
         }]
 
@@ -1472,15 +1368,15 @@
         // Extract datasets for each age group
         const lungdatas = [
             {
-                label: '20-39',
-                data: lungdata.map(item => item["20-39"]),
-                backgroundColor: '#0000c0', // pink
+                label: '20-59',
+                data: lungdata.map(item => item["20-59"]),
+                backgroundColor: '#0000c0', // blue
             },
-            {
-                label: '40-59',
-                data: lungdata.map(item => item["40-59"]),
-                backgroundColor: '#008000', // blue
-            },
+            //{
+            //    label: '40-59',
+            //    data: lungdata.map(item => item["40-59"]),
+            //    backgroundColor: '#008000', // blue
+            //},
             {
                 label: '60+',
                 data: lungdata.map(item => item["60+"]),
@@ -1489,15 +1385,15 @@
         ];
         const prostatedatas = [
               {
-                  label: '20-39',
-                  data: prostatedata.map(item => item["20-39"]),
+                  label: '20-59',
+                  data: prostatedata.map(item => item["20-59"]),
                   backgroundColor: '#0000c0', // pink
               },
-              {
-                  label: '40-59',
-                  data: prostatedata.map(item => item["40-59"]),
-                  backgroundColor: '#008000', // blue
-              },
+              //{
+              //    label: '40-59',
+              //    data: prostatedata.map(item => item["40-59"]),
+              //    backgroundColor: '#008000', // blue
+              //},
               {
                   label: '60+',
                   data: prostatedata.map(item => item["60+"]),
@@ -1506,15 +1402,15 @@
         ];
         const bmdatas = [
               {
-                  label: '20-39',
-                  data: bmdata.map(item => item["20-39"]),
+                  label: '20-59',
+                  data: bmdata.map(item => item["20-59"]),
                   backgroundColor: '#0000c0', // pink
               },
-              {
-                  label: '40-59',
-                  data: bmdata.map(item => item["40-59"]),
-                  backgroundColor: '#008000', // blue
-              },
+              //{
+              //    label: '40-59',
+              //    data: bmdata.map(item => item["40-59"]),
+              //    backgroundColor: '#008000', // blue
+              //},
               {
                   label: '60+',
                   data: bmdata.map(item => item["60+"]),
@@ -1523,15 +1419,15 @@
         ];
         const stomachdatas = [
              {
-                 label: '20-39',
-                 data: stomachdata.map(item => item["20-39"]),
+                 label: '20-59',
+                 data: stomachdata.map(item => item["20-59"]),
                  backgroundColor: '#0000c0', // pink
              },
-             {
-                 label: '40-59',
-                 data: stomachdata.map(item => item["40-59"]),
-                 backgroundColor: '#008000', // blue
-             },
+             //{
+             //    label: '40-59',
+             //    data: stomachdata.map(item => item["40-59"]),
+             //    backgroundColor: '#008000', // blue
+             //},
              {
                  label: '60+',
                  data: stomachdata.map(item => item["60+"]),
@@ -1540,15 +1436,15 @@
         ];
         const Oesophagusdatas = [
              {
-                 label: '20-39',
-                 data: Oesophagusdata.map(item => item["20-39"]),
+                 label: '20-59',
+                 data: Oesophagusdata.map(item => item["20-59"]),
                  backgroundColor: '#0000c0', // pink
              },
-             {
-                 label: '40-59',
-                 data: Oesophagusdata.map(item => item["40-59"]),
-                 backgroundColor: '#008000', // blue
-             },
+             //{
+             //    label: '40-59',
+             //    data: Oesophagusdata.map(item => item["40-59"]),
+             //    backgroundColor: '#008000', // blue
+             //},
              {
                  label: '60+',
                  data: Oesophagusdata.map(item => item["60+"]),
@@ -1558,15 +1454,15 @@
 
         const Breastdatas = [
              {
-                 label: '20-39',
-                 data: Breastdata.map(item => item["20-39"]),
+                 label: '20-59',
+                 data: Breastdata.map(item => item["20-59"]),
                  backgroundColor: '#0000c0', // pink
              },
-             {
-                 label: '40-59',
-                 data: Breastdata.map(item => item["40-59"]),
-                 backgroundColor: '#008000', // blue
-             },
+             //{
+             //    label: '40-59',
+             //    data: Breastdata.map(item => item["40-59"]),
+             //    backgroundColor: '#008000', // blue
+             //},
              {
                  label: '60+',
                  data: Breastdata.map(item => item["60+"]),
@@ -1575,15 +1471,15 @@
         ];
         const Cervixdatas = [
             {
-                label: '20-39',
-                data: Cervixdata.map(item => item["20-39"]),
+                label: '20-59',
+                data: Cervixdata.map(item => item["20-59"]),
                 backgroundColor: '#0000c0', // pink
             },
-            {
-                label: '40-59',
-                data: Cervixdata.map(item => item["40-59"]),
-                backgroundColor: '#008000', // blue
-            },
+            //{
+            //    label: '40-59',
+            //    data: Cervixdata.map(item => item["40-59"]),
+            //    backgroundColor: '#008000', // blue
+            //},
             {
                 label: '60+',
                 data: Cervixdata.map(item => item["60+"]),
@@ -1592,15 +1488,15 @@
         ];
         const Lungfdatas = [
            {
-               label: '20-39',
-               data: Lungfdata.map(item => item["20-39"]),
+               label: '20-59',
+               data: Lungfdata.map(item => item["20-59"]),
                backgroundColor: '#0000c0', // pink
            },
-           {
-               label: '40-59',
-               data: Lungfdata.map(item => item["40-59"]),
-               backgroundColor: '#008000', // blue
-           },
+           //{
+           //    label: '40-59',
+           //    data: Lungfdata.map(item => item["40-59"]),
+           //    backgroundColor: '#008000', // blue
+           //},
            {
                label: '60+',
                data: Lungfdata.map(item => item["60+"]),
@@ -1609,15 +1505,15 @@
         ];
         const gbdatas = [
            {
-               label: '20-39',
-               data: gbdata.map(item => item["20-39"]),
+               label: '20-59',
+               data: gbdata.map(item => item["20-59"]),
                backgroundColor: '#0000c0', // pink
            },
-           {
-               label: '40-59',
-               data: gbdata.map(item => item["40-59"]),
-               backgroundColor: '#008000', // blue
-           },
+           //{
+           //    label: '40-59',
+           //    data: gbdata.map(item => item["40-59"]),
+           //    backgroundColor: '#008000', // blue
+           //},
            {
                label: '60+',
                data: gbdata.map(item => item["60+"]),
@@ -1626,15 +1522,15 @@
         ];
         const Ovarydatas = [
           {
-              label: '20-39',
-              data: Ovarydata.map(item => item["20-39"]),
+              label: '20-59',
+              data: Ovarydata.map(item => item["20-59"]),
               backgroundColor: '#0000c0', // pink
           },
-          {
-              label: '40-59',
-              data: Ovarydata.map(item => item["40-59"]),
-              backgroundColor: '#008000', // blue
-          },
+          //{
+          //    label: '40-59',
+          //    data: Ovarydata.map(item => item["40-59"]),
+          //    backgroundColor: '#008000', // blue
+          //},
           {
               label: '60+',
               data: Ovarydata.map(item => item["60+"]),
@@ -1683,7 +1579,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 105,  // 👈 ensures space above tall bars
+                            max: 100,  // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -1731,7 +1627,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 105,  // 👈 ensures space above tall bars
+                            max: 100,  // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -1781,7 +1677,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 100,  // 👈 ensures space above tall bars
+                            max: 100,  // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -1832,7 +1728,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 70,  // 👈 ensures space above tall bars
+                            max: 100,  // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -1883,7 +1779,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 80,  // 👈 ensures space above tall bars
+                            max: 100,  // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -1935,7 +1831,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 80,  // 👈 ensures space above tall bars
+                            max: 100,  // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -1986,7 +1882,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 80,  // 👈 ensures space above tall bars
+                            max: 100,  // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -2037,7 +1933,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 90,  // 👈 ensures space above tall bars
+                            max: 100,  // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -2088,7 +1984,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 90,  // 👈 ensures space above tall bars
+                            max: 100,  // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -2139,7 +2035,7 @@
                         },
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 90,  // 👈 ensures space above tall bars
+                            max: 100, // 👈 ensures space above tall bars
                             ticks: {
                                 color: '#000000'
                             }
@@ -2264,377 +2160,183 @@
 
 <!--Start Treatment-->
 <script>
-const dataSets = [
-  [{
-    "year": "Lung",
-    "Complete Treatment": 67.18,
-    "No Treatment": 16.67,
-    "Advised not taken": 6.92,
-    "Partial Treatment": 9.23
-  }, {
-    "year": "Prostate",
-    "Complete Treatment": 66.67,
-    "No Treatment": 0.00,
-    "Advised not taken": 0.00,
-    "Partial Treatment": 33.33
-  }, {
-    "year": "Buccal Mucosa",
-    "Complete Treatment": 43.60,
-    "No Treatment": 17.55,
-    "Advised not taken": 30.02,
-    "Partial Treatment": 8.83
-  }, {
-    "year": "Stomach",
-    "Complete Treatment": 58.36,
-    "No Treatment": 20.82,
-    "Advised not taken": 11.14,
-    "Partial Treatment": 9.68
-  }, {
-    "year": "Oesophagus",
-    "Complete Treatment": 63.71,
-    "No Treatment": 16.94,
-    "Advised not taken": 12.10,
-    "Partial Treatment": 7.26
-  }],
-  [{
-    "year": "Lung",
-    "Complete Treatment": 59.14,
-    "No Treatment": 17.53,
-    "Advised not taken": 11.03,
-    "Partial Treatment": 12.30
-  }, {
-    "year": "Prostate",
-    "Complete Treatment": 74.77,
-    "No Treatment": 10.98,
-    "Advised not taken": 7.01,
-    "Partial Treatment": 7.24
-  }, {
-    "year": "Buccal Mucosa",
-    "Complete Treatment": 46.19,
-    "No Treatment": 16.51,
-    "Advised not taken": 29.79,
-    "Partial Treatment": 7.51
-  }, {
-    "year": "Stomach",
-    "Complete Treatment": 55.68,
-    "No Treatment": 20.43,
-    "Advised not taken": 13.25,
-    "Partial Treatment": 10.65
-  }, {
-    "year": "Oesophagus",
-    "Complete Treatment": 56.96,
-    "No Treatment": 17.10,
-    "Advised not taken": 15.18,
-    "Partial Treatment": 10.76
-  }],
-  [{
-    "year": "Lung",
-    "Complete Treatment": 47.50,
-    "No Treatment": 21.57,
-    "Advised not taken": 13.95,
-    "Partial Treatment": 16.98
-  }, {
-    "year": "Prostate",
-    "Complete Treatment": 67.89,
-    "No Treatment": 16.17,
-    "Advised not taken": 7.97,
-    "Partial Treatment": 7.97
-  }, {
-    "year": "Buccal Mucosa",
-    "Complete Treatment": 38.80,
-    "No Treatment": 20.25,
-    "Advised not taken": 33.18,
-    "Partial Treatment": 7.78
-  }, {
-    "year": "Stomach",
-    "Complete Treatment": 44.76,
-    "No Treatment": 27.99,
-    "Advised not taken": 15.77,
-    "Partial Treatment": 11.48
-  }, {
-    "year": "Oesophagus",
-    "Complete Treatment": 43.63,
-    "No Treatment": 22.27,
-    "Advised not taken": 22.93,
-    "Partial Treatment": 11.18
-  }],
-  [{
-    "year": "Breast",
-    "Complete Treatment": 73.22,
-    "No Treatment": 9.53,
-    "Advised not taken": 3.00,
-    "Partial Treatment": 14.25
-  }, {
-    "year": "Cervix",
-    "Complete Treatment": 67.39,
-    "No Treatment": 12.77,
-    "Advised not taken": 14.95,
-    "Partial Treatment": 4.89
-  }, {
-    "year": "Lung",
-    "Complete Treatment": 65.64,
-    "No Treatment": 18.15,
-    "Advised not taken": 5.41,
-    "Partial Treatment": 10.81
-  }, {
-    "year": "Gall Bladder",
-    "Complete Treatment": 42.65,
-    "No Treatment": 34.87,
-    "Advised not taken": 16.14,
-    "Partial Treatment": 6.34
-  }, {
-    "year": "Ovary",
-    "Complete Treatment": 84.11,
-    "No Treatment": 8.10,
-    "Advised not taken": 1.56,
-    "Partial Treatment": 6.23
-  }],
-  [{
-    "year": "Breast",
-    "Complete Treatment": 70.81,
-    "No Treatment": 9.81,
-    "Advised not taken": 4.58,
-    "Partial Treatment": 14.81
-  }, {
-    "year": "Cervix",
-    "Complete Treatment": 65.87,
-    "No Treatment": 10.65,
-    "Advised not taken": 16.54,
-    "Partial Treatment": 6.94
-  }, {
-    "year": "Lung",
-    "Complete Treatment": 64.38,
-    "No Treatment": 14.71,
-    "Advised not taken": 9.39,
-    "Partial Treatment": 11.53
-  }, {
-    "year": "Gall Bladder",
-    "Complete Treatment": 37.16,
-    "No Treatment": 36.00,
-    "Advised not taken": 16.26,
-    "Partial Treatment": 10.58
-  }, {
-    "year": "Ovary",
-    "Complete Treatment": 81.46,
-    "No Treatment": 5.18,
-    "Advised not taken": 5.33,
-    "Partial Treatment": 8.03
-  }],
-  [{
-    "year": "Breast",
-    "Complete Treatment": 63.70,
-    "No Treatment": 13.46,
-    "Advised not taken": 6.60,
-    "Partial Treatment": 16.24
-  }, {
-    "year": "Cervix",
-    "Complete Treatment": 54.74,
-    "No Treatment": 15.45,
-    "Advised not taken": 23.37,
-    "Partial Treatment": 6.44
-  }, {
-    "year": "Lung",
-    "Complete Treatment": 55.15,
-    "No Treatment": 20.10,
-    "Advised not taken": 11.86,
-    "Partial Treatment": 12.89
-  }, {
-    "year": "Gall Bladder",
-    "Complete Treatment": 28.16,
-    "No Treatment": 41.99,
-    "Advised not taken": 19.90,
-    "Partial Treatment": 9.95
-  }, {
-    "year": "Ovary",
-    "Complete Treatment": 71.47,
-    "No Treatment": 10.78,
-    "Advised not taken": 7.45,
-    "Partial Treatment": 10.30
-  }]
-];
+    const treatments = ["CDT Completed", "CDT Partial", "CDT Planned but not received", "CDT Not received"];
+    const colors = { "CDT Completed": "#0000c0", "CDT Partial": "#82b1ff", "CDT Planned but not received": "#ff0000", "CDT Not received": "#ef5350" };
+    const keyMap = { "CDT Completed": "CT", "CDT Partial": "PT", "CDT Planned but not received": "AT", "CDT Not received": "NT" };
 
-const treatments = ["Complete Treatment", "Partial Treatment", "Advised not taken", "No Treatment"];
-const treatmentColors = {
-    "Complete Treatment": "#1769aa", // teal
-    "Partial Treatment": "#d500f9"  , // blue
-       
-    "Advised not taken": "#00a152",  // yellow
-    "No Treatment": "#ff6d00"   // blue
+const maleData = {
+  "20-59":[{c:"Lung",CT:60.19,AT:17.43,NT:10.50,PT:11.89},{c:"Prostate",CT:74.71,AT:10.90,NT:6.96,PT:7.42},{c:"Mouth",CT:44.66,AT:16.52,NT:30.95,PT:7.87},{c:"Stomach",CT:56.18,AT:20.48,NT:12.79,PT:10.49},{c:"Oesophagus",CT:57.68,AT:17.08,NT:14.85,PT:10.39}],
+  "60+":  [{c:"Lung",CT:47.47,AT:21.59,NT:13.94,PT:17.00},{c:"Prostate",CT:67.89,AT:16.17,NT:7.97,PT:7.97},{c:"Mouth",CT:35.63,AT:19.77,NT:36.80,PT:7.79},{c:"Stomach",CT:44.79,AT:28.02,NT:15.70,PT:11.49},{c:"Oesophagus",CT:43.63,AT:22.27,NT:22.93,PT:11.18}]
+};
+const femaleData = {
+  "20-59":[{c:"Breast",CT:71.34,AT:9.75,NT:4.21,PT:14.71},{c:"Cervix",CT:66.05,AT:10.89,NT:16.36,PT:6.70},{c:"Lung",CT:64.61,AT:15.26,NT:8.77,PT:11.37},{c:"Gall Bladder",CT:39.32,AT:35.17,NT:15.57,PT:9.94},{c:"Ovary",CT:81.90,AT:5.73,NT:4.63,PT:7.75}],
+  "60+":  [{c:"Breast",CT:63.73,AT:13.44,NT:6.60,PT:16.22},{c:"Cervix",CT:54.78,AT:15.46,NT:23.32,PT:6.44},{c:"Lung",CT:55.14,AT:20.06,NT:11.93,PT:12.86},{c:"Gall Bladder",CT:31.50,AT:40.50,NT:18.80,PT:9.20},{c:"Ovary",CT:71.47,AT:10.78,NT:7.45,PT:10.30}]
 };
 
-// Helper to get data array for a treatment in a dataset
-function getTreatmentData(dataset, treatment) {
-  return dataset.map(d => d[treatment] || 0);
-}
+const ages = ["20-59","60+"];
+const rowsPerGroup = 3;
 
-// Plugin to show values on bars
 const valueLabelPlugin = {
-  id: 'valueLabelPlugin',
-  afterDatasetsDraw(chart) {
-      const ctx = chart.ctx;
-      ctx.save();
-      ctx.font = '16px Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-
-
-    chart.data.datasets.forEach((dataset, i) => {
-      if (dataset.hidden) return; // skip hidden datasets
-      const meta = chart.getDatasetMeta(i);
-      meta.data.forEach((bar, index) => {
-        const value = dataset.data[index];
-        if (value === 0) return; // skip zero values
-
-        const barHeight = bar.base - bar.y;
-        const x = bar.x;
-        let y = bar.y;
-
-          // If bar is tall enough, draw label inside bar, else above bar
-        if (barHeight > 18) {
-            ctx.fillStyle = 'white'; // white text inside bar for contrast
-            y += barHeight / 2;
-        } else {
-            ctx.fillStyle = 'black';
-            y -= 8; // above the bar
-        }
-          // Prevent text clipping on top edge
-        if (y < 10) y = 10;
-        ctx.fillText(value.toFixed(1), x, y);
-
+  id:'vlp',
+  afterDatasetsDraw(chart){
+    const ctx=chart.ctx; ctx.save();
+    ctx.font='bold 14px Arial'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    chart.data.datasets.forEach((ds,i)=>{
+      if(ds.hidden) return;
+      const meta=chart.getDatasetMeta(i);
+      meta.data.forEach((bar,idx)=>{
+        const v=ds.data[idx];
+        if(v===null||v===undefined||v<3) return;
+        const bw=Math.abs(bar.base-bar.x);
+        const x=Math.min(bar.base,bar.x)+(bw/2);
+        const y=bar.y;
+        ctx.fillStyle=bw>22?'white':'black';
+        ctx.fillText(v.toFixed(1),x,y);
       });
     });
+    ctx.restore();
   }
 };
 
-// Create charts and legends
-const chartsGroup1 = [];
-const chartsGroup2 = [];
+function makeLabelsPlugin(cancers) {
+  return {
+    id:'customLabels',
+    afterDraw(chart){
+      const ctx=chart.ctx;
+      const yAxis=chart.scales.y;
+      const xRight=chart.chartArea.right;
+      const xLeft=chart.chartArea.left;
+      ctx.save();
 
-function createChart(ctx, dataset) {
-  const chartDatasets = treatments.map(treatment => ({
-    label: treatment,
-    data: getTreatmentData(dataset, treatment),
-    backgroundColor: treatmentColors[treatment],
-    stack: "stack1"
-  }));
+      // Cancer names on LEFT
+      ctx.font='bold 14px Arial';
+      ctx.fillStyle='#333';
+      ctx.textAlign='right';
+      ctx.textBaseline='middle';
+      cancers.forEach((c,i)=>{
+        const base=i*rowsPerGroup;
+        const y0=yAxis.getPixelForValue(base);
+        const y1=yAxis.getPixelForValue(base+1);
+        const y=(y0+y1)/2;
+        ctx.fillText(c, xLeft-6, y);
+      });
 
-  return new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: dataset.map(d => d.year),
-      datasets: chartDatasets
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      // Age labels on RIGHT
+      ctx.font='bold 14px Arial';
+      ctx.fillStyle='#555';
+      ctx.textAlign='left';
+      cancers.forEach((c,i)=>{
+        ages.forEach((age,ai)=>{
+          const rowIdx=i*rowsPerGroup+ai;
+          const y=yAxis.getPixelForValue(rowIdx);
+          ctx.fillText(age, xRight+6, y);
+        });
+      });
+
+      ctx.restore();
+    }
+  };
+}
+
+const allCharts = {male:[], female:[]};
+
+function buildChart(canvasId, dataByAge, group) {
+  const cancers = dataByAge[ages[0]].map(d=>d.c);
+
+  const labels = [];
+  cancers.forEach(() => {
+    labels.push(''); labels.push(''); labels.push('');
+  });
+
+  const datasets = treatments.map(t => {
+    const data = labels.map((lbl,i) => {
+      const cIdx=Math.floor(i/rowsPerGroup);
+      const slot=i%rowsPerGroup;
+      if(slot===2) return null;
+      const age=ages[slot];
+      const cancer=cancers[cIdx];
+      const row=dataByAge[age].find(d=>d.c===cancer);
+      return row ? (row[keyMap[t]]||0) : 0;
+    });
+    return {
+      label:t, data,
+      backgroundColor:colors[t],
+      stack:'stack', hidden:false,
+      categoryPercentage:1.0, barPercentage:1.0
+    };
+  });
+
+  const labelsPlugin = makeLabelsPlugin(cancers);
+
+  const chart = new Chart(document.getElementById(canvasId), {
+    type:'bar',
+    data:{ labels, datasets },
+    options:{
+      indexAxis:'y',
+      responsive:true,
+      maintainAspectRatio:false,
       plugins: {
-        legend: { display: false }, // hide individual legends
-        tooltip: {
-          mode: 'index',
-          intersect: false,
-          callbacks: {
-            label: ctx => {
-              return ctx.dataset.label + ": " + ctx.parsed.y.toFixed(2) + "%";
-            }
+          datalabels: {
+              display: false   // ❌ disables duplicate labels
+          },
+        legend:{display:false},
+        tooltip:{
+          filter: item => item.parsed.x !== null && item.parsed.x > 0,
+          callbacks:{
+            title: items => {
+              const i=items[0].dataIndex;
+              const cIdx=Math.floor(i/rowsPerGroup);
+              const slot=i%rowsPerGroup;
+              return cancers[cIdx]+' — '+ages[slot];
+            },
+            label: c => c.dataset.label+': '+(c.parsed.x||0).toFixed(2)+'%'
           }
         }
       },
-      scales: {
-        x: {
-          stacked: true,
-          title: {
-            display: true,
-            //text: "Cancer Type"
-          },
-          ticks: {
-              color: "black"   // ✅ labels (field names) color
-          },
-        },
-        y: {
-          stacked: true,
-          beginAtZero: true,
-          max: 100,
-          title: {
-            display: true,
-            text: "Percentage (%)"
-          },
-          ticks: {
-            callback: val => val + "%"
-          }
+      scales:{
+        x:{stacked:true,min:0,max:100,display:false,grid:{display:false}},
+        y:{
+          stacked:true,
+          grid:{display:false},
+          border:{display:false},
+          ticks:{display:false}
         }
-      }
+      },
+      layout:{padding:{left:90, right:60, top:4, bottom:4}}
     },
-    plugins: [valueLabelPlugin]
-  });
-}
-
-// Create charts for group 1 (charts 1-3)
-for (let i = 0; i < 3; i++) {
-  const ctx = document.getElementById("chartt" + (i + 1)).getContext("2d");
-  chartsGroup1.push(createChart(ctx, dataSets[i]));
-}
-
-// Create charts for group 2 (charts 4-6)
-for (let i = 3; i < 6; i++) {
-  const ctx = document.getElementById("chartt" + (i + 1)).getContext("2d");
-  chartsGroup2.push(createChart(ctx, dataSets[i]));
-}
-
-// Create legends
-function createLegend(containerId, chartsGroup) {
-  const container = document.getElementById(containerId);
-  const treatmentVisibility = {};
-  treatments.forEach(t => treatmentVisibility[t] = true);
-
-  treatments.forEach(treatment => {
-    const span = document.createElement("span");
-    span.textContent = treatment;
-    span.style.backgroundColor = treatmentColors[treatment];
-    span.dataset.treatment = treatment;
-    span.style.cursor = "pointer";
-    span.style.display = "inline-block";
-    span.style.margin = "0 10px";
-    span.style.padding = "6px 12px";
-    span.style.borderRadius = "4px";
-    span.style.color = "white";
-    span.style.userSelect = "none";
-    span.style.fontWeight = "bold";
-    span.dataset.treatment = treatment;
-    span.classList.add("legend-item");
-    container.appendChild(span);
+    plugins:[valueLabelPlugin, labelsPlugin]
   });
 
-  container.addEventListener("click", e => {
-    if (!e.target.classList.contains("legend-item")) return;
+  allCharts[group].push(chart);
+}
 
-    const treatment = e.target.dataset.treatment;
-    treatmentVisibility[treatment] = !treatmentVisibility[treatment];
+buildChart('c1', maleData, 'male');
+buildChart('c2', femaleData, 'female');
 
-    if (treatmentVisibility[treatment]) {
-        e.target.classList.remove("hidden");
-        e.target.style.opacity = "1";
-        e.target.style.textDecoration = "none";
-    } else {
-        e.target.classList.add("hidden");
-        e.target.style.opacity = "0.4";
-        e.target.style.textDecoration = "line-through";
-    }
-
-    chartsGroup.forEach(chart => {
-      chart.data.datasets.forEach(dataset => {
-        if (dataset.label === treatment) {
-          dataset.hidden = !treatmentVisibility[treatment];
-        }
-      });
-      chart.update();
+function makeLegend(id, group) {
+  const el=document.getElementById(id);
+  const vis={};
+  treatments.forEach(t=>{vis[t]=true;});
+  treatments.forEach(t=>{
+    const s=document.createElement('span');
+    s.className='legend-itemt'; s.textContent=t;
+    s.style.backgroundColor=colors[t]; s.dataset.t=t;
+    el.appendChild(s);
+  });
+  el.addEventListener('click',e=>{
+    if(!e.target.classList.contains('legend-itemt')) return;
+    const t=e.target.dataset.t; vis[t]=!vis[t];
+    e.target.classList.toggle('hidden',!vis[t]);
+    allCharts[group].forEach(ch=>{
+      ch.data.datasets.forEach(ds=>{if(ds.label===t) ds.hidden=!vis[t];});
+      ch.update();
     });
   });
 }
 
-createLegend("legend1", chartsGroup1);
-createLegend("legend2", chartsGroup2);
+makeLegend('legend1','male');
+makeLegend('legend2','female');
 </script>
-
 <!--End Treatment-->
 
 
