@@ -1,0 +1,209 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <!-- jQuery -->
+    <script src="~/assets/jquery.min.js"></script>
+    <script src="~/assets/bootstrap.min.js"></script>
+    <script src="~/assets/jquery.slimscroll.min.js"></script>
+    <script src="~/assets/jquery.blockui.min.js"></script>
+    <script src="~/assets/jquery.cokie.min.js"></script>
+    <script src="~/assets/jquery.uniform.min.js"></script>
+    <script src="~/assets/bootstrap-switch.min.js"></script>
+    <script src="~/assets/metronic.js"></script>
+    <script src="~/assets/layout.js"></script>
+
+    <link href="~/assets/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/assets/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/components-rounded.css" rel="stylesheet" />
+    <link href="~/assets/plugins.css" rel="stylesheet" />
+    <link href="~/assets/layout.css" rel="stylesheet" />
+    <link href="~/assets/light.css" rel="stylesheet" />
+    <link href="~/assets/custom.css" rel="stylesheet" />
+
+    <script src="~/assets/bootstrap-hover-dropdown.min.js"></script>
+    
+
+
+    <script src="~/assets/amcharts.js"></script>
+    <script src="~/assets/serial.js"></script>
+    <script src="~/assets/pie.js"></script>
+    <script src="~/assets/radar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+</head>
+<body>
+    <div> 
+        <div class="col-md-6">
+            <!-- BEGIN BORDERED TABLE PORTLET-->
+            <div class="portlet light">
+                <div class="ptt" style="height:80px">
+                    <div>
+                        <p class="caption-subject uppercase" style="text-align:center">Age Category</p>
+                    </div>
+
+                </div>
+                <div class="portlet-body" style="height:400px;">
+                    <div id="chart_All" class="chart" style="height: 400px;width:830px">
+                    </div>
+                </div>
+            </div>
+            <!-- END BORDERED TABLE PORTLET-->
+        </div>
+    </div>
+
+
+    
+</body>
+
+
+</html>
+<script>
+
+    var ChartsAmallcharts = function () {
+
+        var initAllChart = function () {
+
+            var ageAllchart = AmCharts.makeChart("chart_All", {
+
+                "theme": "light",
+                "type": "serial",
+                "startDuration": 1.5,
+
+                "fontFamily": "Open Sans",
+                "color": "#000000",
+
+                "dataProvider": @Html.Raw(Json.Encode(@ViewBag.agedata)),
+
+                "valueAxes": [{
+                    "position": "left",
+                    "axisAlpha": 0,
+                    "gridAlpha": 0,
+                    "fontSize": 23
+                }],
+
+                "graphs": [{
+
+                    "fillColors": "#6A42C2",
+                    "offset": 0,
+
+                    "fontSize": "25px",
+
+                    "labelText": "[[Count]]",
+
+                    "color": "#000000",
+
+                    "balloonText": "[[category]]: <b>[[value]]</b>",
+
+                    "colorField": "color",
+
+                    "fillAlphas": 1,
+                    "lineAlpha": 0.1,
+
+                    "type": "column",
+
+                    "topRadius": 1,
+
+                    "fixedColumnWidth": 90,
+
+                    "valueField": "Count"
+
+                }],
+
+                "depth3D": 40,
+                "angle": 20,
+
+                "chartCursor": {
+                    "categoryBalloonEnabled": false,
+                    "cursorAlpha": 0,
+                    "zoomable": false
+                },
+
+                "categoryField": "Key",
+
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "gridAlpha": 0,
+                    "fontSize": 22
+                },
+
+                "exportConfig": {
+                    "menuTop": "20px",
+                    "menuRight": "20px",
+
+                    "menuItems": [{
+                        "icon": "/lib/3/images/export.png",
+                        "format": "png"
+                    }]
+                }
+
+            });
+
+
+            // Chart input controls
+            jQuery(".chart_age_chart_input")
+                .off()
+                .on("input change", function () {
+
+                    var property = jQuery(this).data("property");
+
+                    var target = ageAllchart;
+
+                    ageAllchart.startDuration = 0;
+
+                    if (property == "topRadius") {
+                        target = ageAllchart.graphs[0];
+                    }
+
+                    target[property] = this.value;
+
+                    ageAllchart.validateNow();
+
+                });
+
+
+            // Fullscreen
+            $("#chart_All")
+                .closest(".portlet")
+                .find(".fullscreen")
+                .click(function () {
+
+                    ageAllchart.invalidateSize();
+
+                });
+
+        };
+
+
+        return {
+
+            init: function () {
+                initAllChart();
+            }
+
+        };
+
+    }();
+
+
+    // Initialize
+    jQuery(document).ready(function () {
+
+        Metronic.init();
+        Layout.init();
+
+        ChartsAmallcharts.init();
+
+    });
+
+</script>
