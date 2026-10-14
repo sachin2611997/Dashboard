@@ -488,7 +488,8 @@ public class HomeController : Controller
 
     private object BuildVizagDashboard( IQueryable<Report2022> query)
     {
-        var total = query.Where(x => x.final_tti != null).Count();
+        var total = query.Count();
+        //var ttiTotal = query.Count(x => x.final_tti != null);
         var male = query.Count( x => x.SEX == "M" );
         var female = query.Count( x => x.SEX == "F" );
      
@@ -848,7 +849,6 @@ public class HomeController : Controller
     }
 
 
-
     // ============================================================
     // TTI DATA
     // ============================================================
@@ -896,7 +896,6 @@ public class HomeController : Controller
     }
 
 
-
     // ============================================================
     // EMPTY DASHBOARD
     // ============================================================
@@ -919,81 +918,129 @@ public class HomeController : Controller
         };
     }
 
-    public ActionResult Indiamap()
-    {
-        var rows = db.Report_2022.GroupBy(x=>x.STATE).Select(y=>new { state=y.Key,count=y.Count()}).ToList();
-        // 2) state name (UPPERCASE) -> map ID
-        var nameToId = new Dictionary<string, string>
-    {
-        {"ANDAMAN AND NICOBAR", "INAN"}, {"ANDHRA PRADESH", "INAP"}, {"ARUNACHAL PRADESH", "INAR"}, {"ASSAM", "INAS"},
-        {"BIHAR", "INBR"},  {"CHANDIGARH", "INCH"}, {"CHHATTISGARH", "INCT"}, {"DADRA AND NAGAR HAVELI", "INDH"}, {"DAMAN AND DIU", "INDH"},
-        {"DELHI", "INDL"}, {"GOA", "INGA"}, {"GUJARAT", "INGJ"}, {"HARYANA", "INHR"}, {"HIMACHAL PRADESH", "INHP"}, {"JHARKHAND", "INJH"},
-        {"KARNATAKA", "INKA"},{"KERALA", "INKL"},  {"MADHYA PRADESH", "INMP"},  {"MAHARASHTRA", "INMH"}, {"MUMBAI", "INMH_Mumbai"}, {"MANIPUR", "INMN"},
-        { "MEGALAYA", "INML"}, {"MEGHALAYA", "INML"}, {"MIZORAM", "INMZ"}, {"NAGALAND", "INNL"}, {"ODISHA", "INOR"}, {"ORISSA", "INOR"},{"PONDICHERRY", "INPY"},
-        {"PUNJAB", "INPB"},{"RAJASTHAN", "INRJ"}, {"SIKKIM", "INSK"}, {"TAMIL NADU", "INTN"}, {"TELANGANA", "INTG"}, {"TRIPURA", "INTR"}, {"UTTAR PRADESH", "INUP"},
-        {"UTTARAKHAND", "INUT"}, {"WEST BENGAL", "INWB"},{"LAKSHADWEEP", "INLD"}, {"JAMMU & KASHMIR", "INJK"}, {"LADAKH", "INLA"}
 
-    };
+    private static readonly Dictionary<string, string> StateNameToId = new Dictionary<string, string>
+{
+    {"ANDAMAN AND NICOBAR", "INAN"}, {"ANDHRA PRADESH", "INAP"}, {"ARUNACHAL PRADESH", "INAR"}, {"ASSAM", "INAS"},
+    {"BIHAR", "INBR"}, {"CHANDIGARH", "INCH"}, {"CHHATTISGARH", "INCT"}, {"DADRA AND NAGAR HAVELI", "INDH"}, {"DAMAN AND DIU", "INDH"},
+    {"DELHI", "INDL"}, {"GOA", "INGA"}, {"GUJARAT", "INGJ"}, {"HARYANA", "INHR"}, {"HIMACHAL PRADESH", "INHP"}, {"JHARKHAND", "INJH"},
+    {"KARNATAKA", "INKA"}, {"KERALA", "INKL"}, {"MADHYAPRADESH", "INMP"}, {"MAHARASHTRA", "INMH"}, {"MUMBAI", "INMH_Mumbai"}, {"MANIPUR", "INMN"},
+    {"MEGALAYA", "INML"}, {"MEGHALAYA", "INML"}, {"MIZORAM", "INMZ"}, {"NAGALAND", "INNL"}, {"ODISHA", "INOR"}, {"ORISSA", "INOR"}, {"PONDICHERRY", "INPY"},
+    {"PUNJAB", "INPB"}, {"RAJASTHAN", "INRJ"}, {"SIKKIM", "INSK"}, {"TAMIL NADU", "INTN"}, {"TELANGANA", "INTG"}, {"TRIPURA", "INTR"}, {"UTTAR PRADESH", "INUP"},
+    {"UTTARAKHAND", "INUT"}, {"WEST BENGAL", "INWB"}, {"LAKSHADWEEP", "INLD"}, {"JAMMU & KASHMIR", "INJK"}, {"LADAKH", "INLA"}
+};
 
-        // 3) start every state at 0 so none is missing
-        var result = nameToId.Values.Distinct().ToDictionary(id => id, id => 0);
-        int foreign = 0;
+    // Builds { mapId -> patientCount } for the selected filters
+    private Dictionary<string, int> BuildStateCountsFromDb(string center, string system4, string System2,  List<string> ages, out int foreign)
+    {
+        center = string.IsNullOrEmpty(center) ? "registry" : center.ToLower();
+        system4 = system4 ?? "";
+        System2 = System2 ?? "";
+
+        var rows = new List<KeyValuePair<string, int>>();
+
+        // MUMBAI (Report_2021)  -> used for "mumbai" and "registry"
+        if (center == "mumbai" || center == "registry")
+        {
+            var q = db.Report_2021.AsQueryable();
+
+            if (ages != null && ages.Count > 0) q = q.Where(x => ages.Contains(x.BROAD_AGE));
+            if (system4 != "") q = q.Where(x => x.System4 == system4);
+            if (System2 != "") q = q.Where(x => x.System2 == System2);
+
+            rows.AddRange(
+                q.Where(x => x.STATE != null)
+                 .GroupBy(x => x.STATE)
+                 .Select(g => new { State = g.Key, Count = g.Count() })
+                 .ToList()
+                 .Select(a => new KeyValuePair<string, int>(a.State, a.Count)));
+        }
+
+        // VIZAG (Report_2022)   -> used for "vizag" and "registry"
+        if (center == "vizag" || center == "registry")
+        {
+            var q = db.Report_2022.AsQueryable();
+
+            if (ages != null && ages.Count > 0) q = q.Where(x => ages.Contains(x.BROAD_AGE));
+            if (system4 != "") q = q.Where(x => x.System4 == system4);
+            if (System2 != "") q = q.Where(x => x.System2 == System2);
+
+            rows.AddRange(
+                q.Where(x => x.STATE != null)
+                 .GroupBy(x => x.STATE)
+                 .Select(g => new { State = g.Key, Count = g.Count() })
+                 .ToList()
+                 .Select(a => new KeyValuePair<string, int>(a.State, a.Count)));
+        }
+
+        // every state starts at 0 so none is missing on the map
+        var result = StateNameToId.Values.Distinct().ToDictionary(id => id, id => 0);
+        foreign = 0;
 
         foreach (var r in rows)
         {
-            var name = (r.state ?? "").Trim().ToUpper();
+            var name = (r.Key ?? "").Trim().ToUpper();
             string id;
-            if (nameToId.TryGetValue(name, out id))
-                result[id] += r.count;        // += so Mumbai + Maharashtra and Daman + Dadra get added together
+
+            if (StateNameToId.TryGetValue(name, out id))
+                result[id] += r.Value;       // += so Mumbai+Maharashtra / Daman+Dadra add together
             else if (name == "FOREIGN")
-                foreign += r.count;
-            // anything else is ignored
+                foreign += r.Value;
         }
+
+        return result;
+    }
+
+
+    // ---------- CACHE: same filters => no database hit for 10 minutes ----------
+    private Dictionary<string, int> BuildStateCounts(string center, string system4, string System2, List<string> ages, out int foreign)
+    {
+        string key = "indiamap|" + (center ?? "registry").ToLower() + "|" + (system4 ?? "") + "|" + (System2 ?? "") + "|" +
+                     string.Join(",", (ages ?? new List<string>()).OrderBy(a => a));
+
+        var hit = System.Web.HttpRuntime.Cache[key] as Tuple<Dictionary<string, int>, int>;
+        if (hit != null)
+        {
+            foreign = hit.Item2;
+            return hit.Item1;
+        }
+
+        var result = BuildStateCountsFromDb(center, system4, System2, ages, out foreign);
+
+        System.Web.HttpRuntime.Cache.Insert(key, Tuple.Create(result, foreign), null,
+            DateTime.UtcNow.AddMinutes(10), System.Web.Caching.Cache.NoSlidingExpiration);
+
+        return result;
+    }
+
+    // Popup page:  /Home/Indiamap?center=mumbai&system4=Lung&System2=Bronchus&ages=0 - 19&ages=20 - 45
+    public ActionResult Indiamap(string center, string system4, string System2, List<string> ages)
+    {
+        int foreign;
+        var result = BuildStateCounts(center, system4, System2, ages, out foreign);
+
+        string c = string.IsNullOrEmpty(center) ? "registry" : center.ToLower();
 
         ViewBag.Foreign = foreign;
         ViewBag.MumbaiCount = result.ContainsKey("INMH_Mumbai") ? result["INMH_Mumbai"] : 0;
+        ViewBag.Total = (result.Values.Sum() + foreign).ToString("N0");
 
-        return View(result);                   // Dictionary<string,int>
+        ViewBag.CenterLabel = c == "mumbai" ? "Mumbai" : c == "vizag" ? "Vizag" : "All Registry Centers";
+        ViewBag.SiteLabel = string.IsNullOrEmpty(system4) ? "All Sites" : system4;
+        ViewBag.SubSiteLabel = string.IsNullOrEmpty(System2) ? "All Subsites" : System2;
+        ViewBag.AgeLabel = (ages == null || ages.Count == 0) ? "All Ages" : string.Join(", ", ages);
+
+        return View(result);   // Dictionary<string,int>
     }
-   
- 
-   public ActionResult GetStateCounts()
+
+    // Same filters, JSON (kept in case you still call it from somewhere)
+    public ActionResult GetStateCounts(string center, string system4, string System2, List<string> ages)
     {
-        var states = db.Report_2022.Where(x => x.STATE != null).Select(x => x.STATE).ToList();
-
-        var rows = states.GroupBy(s => s.Trim().ToUpper()).Select(g => new
-            {
-                State = g.Key,
-                Count = g.Count()
-            }).ToList();
-
-        var nameToId = new Dictionary<string, string>
-    {
-        {"ANDAMAN AND NICOBAR", "INAN"}, {"ANDHRA PRADESH", "INAP"}, {"ARUNACHAL PRADESH", "INAR"}, {"ASSAM", "INAS"},
-        {"BIHAR", "INBR"},  {"CHANDIGARH", "INCH"}, {"CHHATTISGARH", "INCT"}, {"DADRA AND NAGAR HAVELI", "INDH"}, {"DAMAN AND DIU", "INDH"},
-        {"DELHI", "INDL"}, {"GOA", "INGA"}, {"GUJARAT", "INGJ"}, {"HARYANA", "INHR"}, {"HIMACHAL PRADESH", "INHP"}, {"JHARKHAND", "INJH"},
-        {"KARNATAKA", "INKA"},{"KERALA", "INKL"},  {"MADHYA PRADESH", "INMP"},  {"MAHARASHTRA", "INMH"}, {"MUMBAI", "INMH_Mumbai"}, {"MANIPUR", "INMN"},
-        { "MEGALAYA", "INML"}, {"MEGHALAYA", "INML"}, {"MIZORAM", "INMZ"}, {"NAGALAND", "INNL"}, {"ODISHA", "INOR"}, {"ORISSA", "INOR"},{"PONDICHERRY", "INPY"},
-        {"PUNJAB", "INPB"},{"RAJASTHAN", "INRJ"}, {"SIKKIM", "INSK"}, {"TAMIL NADU", "INTN"}, {"TELANGANA", "INTG"}, {"TRIPURA", "INTR"}, {"UTTAR PRADESH", "INUP"},
-        {"UTTARAKHAND", "INUT"}, {"WEST BENGAL", "INWB"},{"LAKSHADWEEP", "INLD"}, {"JAMMU & KASHMIR", "INJK"}, {"LADAKH", "INLA"}
-    };
-
-       
-       var result = nameToId.Values .Distinct().ToDictionary(id => id, id => 0);
-
-        foreach (var row in rows)
-        {
-            string id;
-
-            if (nameToId.TryGetValue(row.State, out id))
-            {
-                result[id] += row.Count;
-            }
-        }
-
+        int foreign;
+        var result = BuildStateCounts(center, system4, System2, ages, out foreign);
         return Json(result, JsonRequestBehavior.AllowGet);
-
     }
+
 
 
 }

@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>India State Count Map</title>
-
     <style>
         body {
             background: white;
@@ -21,7 +20,7 @@
         path {
             stroke: black;
             stroke-width: 2;
-            filter: drop-shadow(0 0 0.8px #333);
+            /* drop-shadow filter on every path removed: it made rendering/hover slow */
             cursor: pointer;
             vector-effect: non-scaling-stroke;
             paint-order: stroke fill; /* ✅ stroke drawn first */
@@ -88,156 +87,224 @@
                 page-break-inside: avoid;
             }
         }
-      
-.map-container {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    width: 100%;
-    height: calc(100vh - 130px);
-    box-sizing: border-box;
-    overflow: hidden;
-}
-.india-map {
-    flex: 1;
-    min-width: 0;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
 
-#indiaMap {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-    display: block;
-    object-fit: contain;
-}
+        .map-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
+            height: calc(100vh - 130px);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
 
-/* Right-side state information */
-.state-info-box {
-     width: 280px;
-    flex-shrink: 0;
-    align-self: flex-start;
-    background: #ffffff;
-    border: 1px solid #e4eaf2;
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(35, 65, 110, 0.10);
-    font-family: Arial, sans-serif;
-}
-/* Blue heading section */
-.state-info-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px;
-    background: linear-gradient(135deg, #24549f, #3980d8);
-    color: #ffffff;
-}
-.state-info-icon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: 10px;
-    font-size: 20px;
-}
-.state-info-header h3 {
-    margin: 0;
-    padding: 0;
-    border: none;
-    color: #ffffff;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 2px;
-}
-/* Card content */
-.state-info-content {
-    padding: 22px 18px;
-}
-.state-info-box h3 {
-    margin: 0 0 20px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid #ffffff;
-    /*color: #2f6db4;*/
-    font-size: 19px;
-}
+        .india-map {
+            flex: 1;
+            min-width: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
 
-.state-info-row {
-     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
-}
-.state-info-row:last-child {
-    margin-bottom: 0;
-}
-.state-info-row span {
-    color: #78869a;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
+        #indiaMap {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            display: block;
+            object-fit: contain;
+        }
 
-.state-info-row strong {
-     color: #243653;
-    font-size: 19px;
-    font-weight: 700;
-    overflow-wrap: anywhere;
-}
-/* Patient count highlight */
-.state-info-row.count-row {
-    padding: 16px;
-    background: #f0f5ff;
-    border: 1px solid #dce8ff;
-    border-radius: 10px;
-}
+        /* Right-side state information */
+        .state-info-box {
+            width: 280px;
+            flex-shrink: 0;
+            align-self: flex-start;
+            background: #ffffff;
+            border: 1px solid #e4eaf2;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(35, 65, 110, 0.10);
+            font-family: Arial, sans-serif;
+        }
+        /* Blue heading section */
+        .state-info-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px;
+            background: linear-gradient(135deg, #24549f, #3980d8);
+            color: #ffffff;
+        }
 
-.state-info-row.count-row strong {
-    color: #285fb5;
-    font-size: 32px;
-    line-height: 1.2;
-}
+        .state-info-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 10px;
+            font-size: 20px;
+        }
 
-.state-info-row.count-row small {
-    color: #7a8ba5;
-    font-size: 11px;
-}
-#indiaMap path {
-    cursor: pointer;
-}
+        .state-info-header h3 {
+            margin: 0;
+            padding: 0;
+            border: none;
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        /* Card content */
+        .state-info-content {
+            padding: 22px 18px;
+        }
 
-#indiaMap path:hover {
-    opacity: 0.75;
-}
+        .state-info-box h3 {
+            margin: 0 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #ffffff;
+            /*color: #2f6db4;*/
+            font-size: 19px;
+        }
 
-@@media (max-width: 768px) {
-    .map-container {
-        flex-direction: column;
-    }
+        .state-info-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
 
-    .state-info-box {
-        width: 100%;
-        box-sizing: border-box;
-    }
-}
+            .state-info-row:last-child {
+                margin-bottom: 0;
+            }
 
+            .state-info-row span {
+                color: #78869a;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .state-info-row strong {
+                color: #243653;
+                font-size: 19px;
+                font-weight: 700;
+                overflow-wrap: anywhere;
+            }
+            /* Patient count highlight */
+            .state-info-row.count-row {
+                padding: 16px;
+                background: #f0f5ff;
+                border: 1px solid #dce8ff;
+                border-radius: 10px;
+            }
+
+                .state-info-row.count-row strong {
+                    color: #285fb5;
+                    font-size: 32px;
+                    line-height: 1.2;
+                }
+
+                .state-info-row.count-row small {
+                    color: #7a8ba5;
+                    font-size: 11px;
+                }
+
+        #indiaMap path {
+            cursor: pointer;
+        }
+
+            #indiaMap path:hover {
+                opacity: 0.75;
+            }
+
+        @@media (max-width: 768px) {
+            .map-container {
+                flex-direction: column;
+            }
+
+            .state-info-box {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+
+        /* ===== Filter summary bar (registry / site / sub-site / age) ===== */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 16px;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            background: #f5f8fc;
+            border-bottom: 1px solid #e4eaf2;
+        }
+
+            .filter-bar .chip {
+                background: #fff;
+                border: 1px solid #dce8ff;
+                border-radius: 20px;
+                padding: 4px 12px;
+                color: #243653;
+            }
+
+                .filter-bar .chip b {
+                    color: #78869a;
+                    font-weight: 600;
+                    margin-right: 4px;
+                }
+
+                .filter-bar .chip.total {
+                    background: #285fb5;
+                    border-color: #285fb5;
+                    color: #fff;
+                    margin-left: auto;
+                }
+
+                    .filter-bar .chip.total b {
+                        color: #cfe0ff;
+                    }
+
+        .legend {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font: 12px Arial;
+            margin-left: 12px;
+        }
+
+            .legend i {
+                display: inline-block;
+                width: 18px;
+                height: 12px;
+                border: 1px solid #999;
+            }
     </style>
 </head>
-
 <body>
+    <div class="filter-bar">
+        <span class="chip"><b>Registry:</b> @ViewBag.CenterLabel</span>
+        <span class="chip"><b>Site:</b> @ViewBag.SiteLabel</span>
+        <span class="chip"><b>Sub-site:</b> @ViewBag.SubSiteLabel</span>
+        <span class="chip"><b>Age:</b> @ViewBag.AgeLabel</span>
+        <span class="legend">
+            Low
+            <i style="background:#e3f2fd"></i><i style="background:#bbdefb"></i><i style="background:#90caf9"></i><i style="background:#64b5f6"></i>
+            High
+        </span>
+        <span class="chip total"><b>Total patients:</b> @ViewBag.Total</span>
+    </div>
     <div class="map-container">
         <!-- India SVG Map -->
         <div class="india-map">
-
             <svg id="indiaMap" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
-
                 <g id="features">
                     <path d="M802.5 941.1l-0.2 0.4 0.3 0.4 0.5-0.1 0.4 0.8-0.1 0.3 0.2 0.7 0.1 0.8-0.1 1 0.4 0.2 0.4 0.8 0.1 1.1-0.2 0.3 0.4 0.4 0.2 0.6-0.5 0.5-0.2 0.6 0.2 0.3-0.6 0.3 0.2 0.5-0.3 0.4 0 0.6 0.5 0.2-0.4 1-0.3 0.2-0.4-0.5-0.5 0-0.2 0.4 0.1 0.5-0.5 0.7-0.6-0.2 0.2-1.2-0.4-0.2-0.4-0.6 0.2-0.4-0.5-0.4 0.1-0.5-0.4-0.7-0.4 0-0.2-0.5 0.3-0.3-0.2-0.7-0.4-0.2-0.2-0.6-0.4 0.1-0.3-0.6-0.3-0.2-0.5 0.1-0.1-0.8 0.1-1.1-0.2-0.1-0.2-1.1 0.6-0.4 0-1 0.3-0.4 0.7 0 0.6 0.1 0.6-0.7 1.4-0.1 0-0.3 0.5-0.3 0.6-0.1z m-3.7-5.6l0.3 0.6 0 0.7 0.9 0.6-0.1 0.5-0.3 0.3-0.5 1-0.5 0.2-0.7 0.5-0.3 0.7-0.6 0.5-0.5-0.7 0.1-0.6-0.2-0.5 0.3-0.4-0.1-1.1 0.8-0.5 1.3-0.4-0.1-1.2 0.2-0.2z m-9.1-16l0.8 0.5-0.2 0.9 0.5 0.4 0.3-0.3 0.8 0.9 0.4 1.1-0.4 0.7-0.5-0.8-0.7-0.2-0.5 0.2-0.6 0.5-0.6-0.2-0.3-0.3 0.1-0.7-0.8-0.5-0.2-0.5 0.4-0.4-0.1-0.5 0.4-0.5 0.5 0.1 0.7-0.4z m4.6-0.1l0.4 0.1 0.5 0.9-0.1 1.6-0.1 0.1-1.8-1.5 0.9-0.9 0.2-0.3z m0.8-2.7l0.3 0.4 0.1 1.2 0.2 0.6-0.2 0.2-0.6-0.8 0.3-0.4-0.3-0.3-0.2-0.7 0.4-0.2z m-1.4-2.9l0.5 0.1 0 0.8-0.5 0.7-0.5 0.2-0.1 0.6 0.6 0.7 0.1 0.5 0.5 0.3 0.1 0.6-0.3 0.8-0.9 0.1 0 0.9-0.4 0.1-0.2-1.1 1.1-0.5 0-0.6-0.3-0.2-0.8 0.9-0.1-0.7-0.7-1.3-0.1-1.4 0.6-0.3 0.4-0.3 0.1-0.7 0.9-0.2z m-8-1l0.5 1-0.4 0.2-0.5-0.6 0.4-0.6z m-3-2.5l0.5 0.3-0.3 1-0.2 0.9 0.8 0.9 1.1 0.5 0.3 0.4-0.3 0.5-0.8-0.2-1.1-0.6-0.6-0.7-0.5-0.7 0-1 0.3-0.9 0.8-0.4z m-2.2-3.2l0.3 0.3-0.1 0.6-0.5-0.3 0.3-0.6z m15.6-2.8l0.2 1.2 0.4 0.1 0.2 1.6-0.5 0 0-1.3-0.4-0.8 0.1-0.8z m-22.6-18.6l0.7 0.7 0.3 0.7 0.2 0.8-0.2 0.7-0.4 0.4-0.6 0.2-0.5-0.3-1.1 0.1-0.3-0.6 0-1.9 1.3 0 0.6-0.8z m-7.5-46l1.2 1 0.1 1.4 0.7 0.7-0.1 1.2 0.4 1.1 0 0.6-0.6 0.3 0.1 0.4-0.8 0.6-0.3 0.6 0.1 0.6 0.6 0.2 0.1 0.3-1 1.3 0 0.3-0.9 0.2-0.5-0.2-0.5-0.5-0.8-0.3-0.4 0-0.5 0.4-0.5-0.3 0.7-1.1 0.3-0.9-0.3-0.9-0.4-0.5-0.4 0 0.1-1.5-0.2-0.6 0-1.1 0.5 0 0.5-0.2 0.5-1 0.7-0.5 0.1-0.6 0.5-0.2 0.4-0.5 0.6-0.3z m3.5-17.1l0.7 0.6 0.5 1.6-0.6 1 0.8 0.2-0.1 0.5-1.4 0.7-1.1 0-0.5-0.6 0.3-0.4-0.1-0.5 0.9-0.1 0.1-1-0.4-0.5 0.2-0.8 0.4-0.8 0.3 0.1z m-0.9-2.2l0.2 0.7-0.5-0.1 0.3-0.6z m-10.7-0.1l0.6 0 0.8 0.2 0 0.9 0.1 0.5-0.4 0.5-0.2-0.2-1-0.1-0.2-0.5 0.3-1.3z m8.8-0.3l0.1 0.3 0.6 0 0 0.5-0.3 0.4-0.5 0-0.1-0.9 0.2-0.3z m13.2-6.7l0.3 0.2 0.8-0.2 0.3 0.2-0.6 0.7-0.9-0.5 0.1-0.4z m-11.7-3.7l0.3 0.9-0.3 0.2 0-1.1z m10.2-1.6l0.4-0.3 0.6 0.4 0.1 0.9 0.8 1.4 0.5 1.4-0.3 0.4-0.5-0.1-0.1-0.4-0.9-1.4-0.4 0.1-0.4-0.9-0.7-0.2-0.1-0.5 0.5-0.2 0.5-0.6z m0.6-2.1l0.4 0.1-0.2 1.6-0.2 0.1-0.8-0.8 0-1 0.8 0z m1-1.4l0 0.5 0.2 0.4 0.1 0.8 0.5 0.6-0.1 0.4-0.3 0.4-0.4-0.6-0.5-0.2 0-0.9-0.9-0.1-0.3-0.3-0.2-0.6 0.2-0.2 0.8 0.3 0.9-0.5z m1.2-1.5l0.4 0.5 0.3 1.3-0.2 0.5 0.1 0.6-0.2 0.5-0.4 0.1-0.9-1.3 0.5-1.6 0.4-0.6z m-10.1-0.7l0.1 0.2 0.3 1.7 0.6-0.4 0.5 0.2 0 0.6-0.5 1.2-0.1 0.6 0.5 0.5 0.6 1.2-0.3 0.3-0.6-0.4 0.4 1.3-0.8 0.4-0.3 0.6 0.4 1.5 0.4-1 0.9-0.1 0.3 0.3-0.3 0.9 0.3 0.6-0.9 4.3-0.4 0.3-0.6 0.1-0.5 0.3-0.1 0.8-0.4 0.4-0.4-0.1 0 0.6 0.6 0 0.7-0.9 0.8-0.3 0.3 0.3-0.1 1.5-0.6 1.5-0.2 0.9 0.1 0.2-0.5 0.8-0.3-0.5-0.9 0-0.5-0.4 0.1-0.8-0.6-0.6-0.6-0.6 0.1-1.1-0.4-0.9 0.1-0.7-0.3-0.8-0.4 0.1-0.3 0.6-0.3-0.8 0.1-1.4-0.3-1.6-0.5 0.1-0.3-0.6 0.3-0.7 0-0.6 0.3-0.3 0.2-0.5 0.6-0.6 0.3 0.5 0.3 1 0.6 0.5-0.1-1.4 0.1-0.5 0.1-1.9 0.3-1.5-0.1-0.3 0.1-0.8 0.2-0.6 0.4-1.6 1.2-1.6 0.3 0z m0.8-0.2l0.2 0.3 0.7 0.1 0.1 0.8-0.1 0.5-1.1-0.2 0-1.1 0.2-0.4z m4.7-0.3l0.3 0.7-1.2-0.2 0.9-0.5z m4.8-0.2l0.3 0.7-0.1 0.4-0.5-0.1 0.1-0.9 0.2-0.1z m-10-1l0.3 0.1-0.3 1.3-0.3-0.6 0.3-0.8z m6.3 0.5l-0.5 0.6-0.6-0.6 0.3-0.4 0.4 0.4 0.4 0z m-4.5-0.9l0.4 0.2 0.5-0.2 0.5 0.3 0.8-0.1 0.3 0.1 0.5 1.2-0.8 0.3 0.4 0.6 0.1 0.9-0.6-0.3-0.2 1.2-0.3-0.2-1 1.7-0.2 0.7-0.8 0.6-0.7-0.6 0.1-0.4 0.7-2.2 0.1-0.7-0.1-0.7-0.4-0.2-0.3-0.3 0.3-0.9 0.3 0.3 0.5-0.6-0.1-0.7z m29.1-0.3l0.5 0.8 0.5 0.3-0.1 0.4 0.2 0.9-1.1 0-0.4-0.2-0.3-1.2 0.2-0.6 0.5-0.4z m-27-2.4l0.5 0.1 0.5 0.4-0.7 0.3-0.5-0.4 0.2-0.4z m2.8-0.2l-0.4 0.4 0 0.5-0.3 0.7-0.3-0.2 0.2-0.6 0.1-0.9 0.5-0.3 0.2 0.4z m-6.7-11.6l0 1.5-0.5-0.6 0.5-0.9z m5.1-2.4l0.3 0.2 0 0.7 0.5 0 0.5 1.6 0.2 0.5-0.5 0.7 0.1 0.4 0.6 0.4 0.1 0.7 0.4 0.3-0.4 0.6 0 0.4-0.2 1.1 0 1 0.1 0.8 0.4 1-0.4 1.6-0.4-0.3-0.3 0.4 0.4 0.5-0.2 0.4-0.5 0.4-0.2 0.7-0.5-0.5-0.6 0.3-1.3-0.3 0.3 0.9 0.9 1.2 0.4 0.9-0.3 0.3-0.5-0.1-0.7 0.4-0.6-0.4-0.4 0.3-0.7-0.4-0.6 0.5-0.8 0-0.5-1-0.1-2.4 0.2-0.8-0.1-0.5 0.2-0.6-0.4-0.7 0.1-0.7 0.3-0.5 0-1-0.4-0.4 0.4-0.2 0.2-0.6 0.6-0.1-0.1-0.4 0.3-0.5-0.4-0.7 0.3-0.1 0-0.7-0.3-0.5-0.3-1.3 0.1-1.1 0.4 0 0.9-1 0.6 0 0-0.7 0.9-0.2 0.1 0.3 0.1 0 0.2-0.2 0.1 0.2-0.1 0.2 0.1 0.1 0.9-0.2 0.4-0.4 0.2-0.5z m-5.5-2.2l0.6 0.4 0.1 2.5-0.2 0.7-0.7 0.8 0 0.5-0.5 0.7-0.5-1.3-0.1-0.6 0.4-0.6 0.1-1 0.3-0.7-0.2-0.3 0.4-1 0.3-0.1z m8.5-0.1l-0.4 0.3-0.6 0.9-0.3-0.1 0-0.9 0.5 0.3 0.8-0.5z m-2.2-0.8l0.3 0 0.2 0.8-0.7-0.1 0.2-0.7z m36.8-12.4l0.1 0.7-0.5 0.3-0.2-0.5 0.6-0.5z m-34-3l0.3 0.7 0.1 1.2-0.2 0.6-0.1 0.7 0.1 1.1 0.4 0.4 0.3 1.2 0.5 0.6-0.2 0.5-0.5-0.2-0.4 0.2 0-0.8-0.4 0.2-0.6-0.2-0.7 0.5-0.4-0.7-0.2 0.4 0.1 0.5 0.5 0.1 0.9 0.5 0.9 1.3 0.4-0.1-0.1 0.8-0.6 1.6 0.1 1.1-0.2 0.2 0.2 1.1-0.2 0.7-0.6 1-0.5 0.2-0.5-0.1-0.3 0.4-0.6-0.7-0.2-0.7-0.4 0.3-0.4 0.9 0.2 0.6 0.8 0.7-0.3 0.5-0.5-0.1 0-0.7-0.7 0.1-0.2 0.5 0 0.5-0.5 0.3 0 0.9 0.4 0 0 0.6-0.4 0.1-0.2 0-0.2 0.1-0.1-0.1 0.1-0.2 0-0.2-1.2-0.2-0.2-0.4 0.2-0.6-0.2-0.5 0-0.8 0.6 0 0.1-0.5-0.7-0.4 0.1-1 0-1.1 0.7-0.4-0.3-0.7 0.9-0.5-0.9-0.2 0.6-1.7-0.1-0.7 0.6 0 0.1-0.6-0.4 0-0.5-0.5 0.6-0.7-0.5-0.1 0-0.7 0.3-0.2 0-0.8 0.5-0.6-0.3-0.6 0.8-0.2 0.3-0.4-0.3-0.5 0.1-0.8 0.7-0.1 0-0.5 0.8-0.1-0.5-0.9 0.2-0.1 1.2-0.2 0.3 0.4 0.5-0.2-0.3-0.5 0.3-0.3 0.6 0.4 0.1-0.7 0.3 0.1z m-0.4-2.9l0.3 0.4-0.3 0.5-0.8 0-0.1-0.6 0.9-0.3z m9.6-13.6l0.3 1-0.1 0.8-0.2 0.7-0.3-0.1 0.2-0.7-0.2-1.5 0.3-0.2z m7.5-21.1l-0.2 0.8-0.5 0 0.3-0.7 0.4-0.1z" id="INAN" name="Andaman and Nicobar">
                     </path>
@@ -359,17 +426,10 @@
                     </circle>
                     <circle class="Maharashtra" cx="305.7" cy="597.9" id="INMH">
                     </circle>
-
-                    <circle id="INMH_Mumbai" name="Mumbai" cx="230.7" cy="610" r="5"
-                            fill="red" stroke="#fff" stroke-width="1" style="cursor:pointer"></circle>
-                    <text x="200" y="610" text-anchor="middle" font-size="15" font-weight="bold" fill="black">
-                        Mumbai
-                    </text>
-                    <text x="200.7" y="630" text-anchor="middle" font-size="16" font-weight="bold" fill="#0d47a1">
-                        @ViewBag.MumbaiCount
-                    </text>
-
-
+                    <circle id="INMH_Mumbai" name="Mumbai" cx="230.7" cy="610" r="5" fill="red" stroke="#fff" stroke-width="1" style="cursor:pointer">
+                    </circle>
+                    <text x="200" y="610" text-anchor="middle" font-size="15" font-weight="bold" fill="black"> Mumbai </text>
+                    <text x="200.7" y="630" text-anchor="middle" font-size="16" font-weight="bold" fill="#0d47a1"> @ViewBag.MumbaiCount  </text>
                     <circle class="Manipur" cx="801.5" cy="443.1" id="INMN">
                     </circle>
                     <circle class="Meghalaya" cx="737" cy="417.6" id="INML">
@@ -405,129 +465,57 @@
                     <circle class="Ladakh" cx="344.9" cy="136.5" id="INLA">
                     </circle>
                 </g>
-
                 <g id="hoverLayer" pointer-events="none"></g>
             </svg>
         </div>
         <!-- Right-side State Information Box -->
-
         <div class="state-info-box">
-
             <div class="state-info-header">
-             
-                <h3><strong id="selectedState" >Select a state</strong></h3>
+                <h3><strong id="selectedState">Select a state</strong></h3>
             </div>
-
             <div class="state-info-content">
-
-               
-
                 <div class="state-info-row count-row">
                     <span>Patient Count</span>
                     <strong id="selectedCount">-</strong>
                     <small>Registered Patients</small>
                 </div>
-
             </div>
-
         </div>
-
     </div>
-            <div style="text-align:center;font:bold 16px Arial">Foreign: @ViewBag.Foreign</div>
+    <div style="text-align:center;font:bold 16px Arial">Foreign: @ViewBag.Foreign</div>
+    <script src="~/assets/jquery.min.js"></script>
+    <script>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-            <script>
-                /* ===============================
-                   1️⃣ STATE DATA (YOUR COUNTS)
-                ================================ */
-
-                //        const stateData = {
-
-                //            // INAN: { value: 0.0, extra: 1.0 },     // Andaman & Nicobar Islands
-                //            INAN: { value: 0,      },   // Andaman & Nicobar Islands
-                //            INAP: { value: 15,     },   // Andhra Pradesh
-                //            INAR: { value: 3,     },   // Arunachal Pradesh
-                //            INAS: { value: 78,    },   // Assam
-                //            INBR: { value: 178,   },   // Bihar
-                //            INCH: { value:  10 },     // Chandigarh
-
-                //            INCT: { value: 6,  },   // Chhattisgarh
-                //            INDL: { value:4 ,  },   // Delhi
-                //            INGA: { value: 0,   },   // Goa
-                //            INGJ: { value: 6,  },     // Gujarat
-
-                //            INHR: { value: 25,    },   // Haryana
-                //            INHP: { value: 4,    },   // Himachal Pradesh
-                //            INJK: { value: 12,   },   // Jammu & Kashmir
-                //            INJH: { value: 37,  },   // Jharkhand
-
-                //            INKA: { value: 2,  },   // Karnataka
-                //            INKL: { value: 1,   },     // Kerala
-
-                //            INMP: { value: 31,   },     // Madhya Pradesh
-                //            INMH: { value: 195,  },   // Maharashtra
-
-                //            INMN: { value: 4, },   // Manipur
-                //            INML: { value: 3,  },   // Meghalaya
-                //            INMZ: { value: 1,  },     // Mizoram
-                //            INNL: { value: 5,   },   // Nagaland
-
-                //            INOR: { value: 19, },   // Odisha
-                //            INPY: { value: 0 },    //pondichery
-                //            INPB: { value: 154,   },     // Punjab
-                //            INRJ: { value: 12,  },   // Rajasthan
-                //            INSK: { value: 0,   },   // Sikkim
-
-                //            INTN: { value: 2,  },   // Tamil Nadu
-                //            INTG: { value: 1,  },   // Telangana
-                //            INTR: { value: 1, },   // Tripura
-
-                //            INUP: { value: 232, },   // Uttar Pradesh
-                //            INUT: { value: 8,   },   // Uttarakhand
-                //            INWB: { value: 146, },   // West Bengal
-
-                //            INLD: { value: 0 },   // Lakshadweep
-                //            INLA: { value: 0, }    // Ladakh
-
-
-
-
-                //};
                 const raw = @Html.Raw(Json.Encode(Model));
                 const stateData = {};
                 Object.keys(raw).forEach(id => { stateData[id] = { value: raw[id] }; });
+                const maxCount = Math.max(1, ...Object.values(raw));
 
-                /* ===============================
-                   2️⃣ COLOR SCALE (LIKE IMAGE)
-                ================================ */
+                /* 2️⃣ COLOR SCALE (LIKE IMAGE) = */
 
                 function getColor(count) {
                     //blue
                     //if (count > 30 && count <= 60) return "#1565c0";
-                    if (count >= 101 && count <= 300) return "#1e88e5";
+                    //if (count >= 101 && count <= 300) return "#1e88e5";
                     //if (count > 10 && count <= 20) return "#64b5f6";
-                    if (count >= 30 && count <= 100) return "#90caf9";
+                  //  if (count >= 30 && count <= 100) return "#90caf9";
                     //if (count >= 1 && count <= 2) return "#bbdefb";
-                    if (count >= 0 && count <= 29) return "#e3f2fd";
+                   // if (count >= 0 && count <= 29) return "#e3f2fd";
 
-
-
-
-                    return "#ffffff";
+                    if (!count) return "#ffffff";
+                    const r = count / maxCount;
+                    if (r > 0.75) return "#64b5f6";
+                    if (r > 0.50) return "#90caf9";
+                    if (r > 0.25) return "#bbdefb";
+                    return "#e3f2fd";
                 }
-
-
-
                 Object.keys(stateData).forEach(id => {
                     const state = document.getElementById(id);
                     if (!state || state.tagName !== "path") return;   // <-- skip the Mumbai circle
                     state.style.fill = getColor(stateData[id].value);
                 });
 
-                /* ===============================
-                   3️⃣ APPLY COLOR + TOOLTIP
-                ================================ */
-
+                /*  3️⃣ APPLY COLOR + TOOLTIP  = */
                 Object.keys(stateData).forEach(id => {
                     const state = document.getElementById(id);
                     if (!state) return;
@@ -540,9 +528,7 @@
                     state.appendChild(title);
                 });
 
-                /* ===============================
-                   4️⃣ ADD STATE NAME + COUNT TEXT
-                ================================ */
+                /*  4️⃣ ADD STATE NAME + COUNT TEXT */
 
                 Object.keys(stateData).forEach(id => {
                     const state = document.getElementById(id);
@@ -584,9 +570,7 @@
                     state.parentNode.appendChild(text);
                 });
 
-                /* ===============================
-                5️⃣ HOVER: ZOOM STATE + SHOW NAME & COUNT
-                ================================ */
+                /*  5️⃣ HOVER: ZOOM STATE + SHOW NAME & COUNT */
                 const hoverLayer = document.getElementById("hoverLayer");
                 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -640,55 +624,19 @@
 
                     el.addEventListener("mouseleave", () => hoverLayer.innerHTML = "");
                 });
-            </script>
-  
-   
-    <script>
-      $(document).ready(function () {
-
-    var stateCounts = {};
-
-    // Get state counts from the controller
-    $.ajax({
-        url: '@Url.Action("GetStateCounts", "Home")',
-        type: 'GET',
-        dataType: 'json',
-
-        success: function (data) {
-            stateCounts = data;
-            console.log("State counts loaded:", stateCounts);
-        },
-
-        error: function (xhr) {
-            console.log("Error loading state counts:", xhr.status);
-        }
-    });
-
-    // Click any state on the SVG map
-    $("#indiaMap").on("click", "path", function () {
-
-        var stateId = this.id;
-
-        var stateName = $(this).attr("name") ||
-                        $(this).attr("data-name") ||
-                        stateId;
-
-        var count = stateCounts[stateId];
-
-        console.log("Clicked state ID:", stateId);
-        console.log("Patient count:", count);
-
-        $("#selectedState").text(stateName);
-        $("#selectedCount").text(
-            count !== undefined ? count.toLocaleString() : "0"
-        );
-
-    });
-
-});
     </script>
-   
-    
 
+    <script>
+        // Counts already come filtered from the controller (stateData), no second AJAX call needed
+        $(function () {
+            $("#indiaMap").on("click", "path", function () {
+                var id = this.id;
+                var name = $(this).attr("name") || $(this).attr("data-name") || id;
+                var count = stateData[id] ? stateData[id].value : 0;
+                $("#selectedState").text(name);
+                $("#selectedCount").text(Number(count).toLocaleString());
+            });
+        });
+    </script>
 </body>
 </html>

@@ -5,31 +5,19 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <title>Annual Cancer Registry Report</title>
-
-
     <!-- =========================================================
          GOOGLE FONTS
     ========================================================== -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
-
-
     <!-- =========================================================
          METRONIC / JQUERY
     ========================================================== -->
-
     <script src="~/assets/jquery.min.js"></script>
     <script src="~/assets/bootstrap.min.js"></script>
     <script src="~/assets/jquery.slimscroll.min.js"></script>
@@ -46,49 +34,29 @@
     ========================================================== -->
 
     <link href="~/assets/font-awesome.min.css" rel="stylesheet" />
-
     <link href="~/assets/bootstrap.min.css"  rel="stylesheet" />
-
     <link href="~/assets/components-rounded.css" rel="stylesheet" />
-
     <link href="~/assets/plugins.css" rel="stylesheet" />
-
     <link href="~/assets/layout.css" rel="stylesheet" />
-
     <link href="~/assets/light.css" rel="stylesheet" />
-
     <link href="~/assets/custom.css" rel="stylesheet" />
-
-    <link href="~/assets/select2.css" rel="stylesheet" />
-
-   
+    <link href="~/assets/select2.css" rel="stylesheet" /> 
     <!-- =========================================================
          OTHER LIBRARIES
     ========================================================== -->
-
     <script src="~/assets/bootstrap-hover-dropdown.min.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-
     <script src="~/assets/amcharts.js"></script>
     <script src="~/assets/serial.js"></script>
     <script src="~/assets/pie.js"></script>
     <script src="~/assets/radar.js"></script>
-
-   
-
     <!-- =====================================================
          AMCHARTS 4 - PIE CHART
     ====================================================== -->
     <script src="~/assets/core4.js"></script>
-
     <script src="~/assets/core.js"></script>
-    <style>
-       
-  
+    <style>  
         #pageLoader {
             position: fixed;
             top: 0;
@@ -97,17 +65,14 @@
             height: 100vh;
             background: #ffffff;
             z-index: 9999999;
-
             display: flex;
             justify-content: center;
             align-items: center;
         }
-
         .loading-logo {
             width: 280px;
             max-width: 70%;
             height: auto;
-
             animation: logoPulse 1.5s ease-in-out infinite;
         }
 
@@ -129,12 +94,6 @@
             transition: opacity 0.4s ease;
         }
     
-
-   
-
-
-
-
         :root {
             --bg: #eef2f5;
             --surface: #ffffff;
@@ -155,7 +114,6 @@
             --shadow: 0 1px 2px rgba(22,48,63,.06), 0 6px 20px -8px rgba(22,48,63,.18);
             --ease: .35s cubic-bezier(.4,0,.2,1);
         }
-
 
         /* =========================================================
            DARK MODE
@@ -179,7 +137,6 @@
             }
         }
 
-
         :root[data-theme="dark"] {
             --bg: #0e1a20;
             --surface: #15252e;
@@ -195,20 +152,15 @@
             --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px -8px rgba(0,0,0,.5);
         }
 
-
         * {
             box-sizing: border-box;
         }
-
-       
 
         html,
         body {
             margin: 0;
             padding: 0;
         }
-
-
         body {
             background: var(--bg);
             color: var(--ink);
@@ -219,7 +171,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-
         h1,
         h2,
         h3,
@@ -229,19 +180,15 @@
             letter-spacing: -.01em;
         }
 
-
         a {
             color: inherit;
             text-decoration: none;
         }
-
-
         :focus-visible {
             outline: 2px solid var(--primary);
             outline-offset: 2px;
             border-radius: 6px;
         }
-
 
         /* =========================================================
            TOPBAR
@@ -262,15 +209,12 @@
             padding: 0 24px 0 calc(var(--sidebar-collapsed) + 24px);
             transition: padding var(--ease);
         }
-
-
         .brand {
             display: flex;
             align-items: center;
             gap: 12px;
             min-width: 0;
         }
-
 
        .brand-mark {
     width: 40px;
@@ -865,18 +809,60 @@
                 padding-left: calc(var(--sidebar-collapsed) + 14px);
             }
         }
+         .india-map-launch {
+        display: flex; align-items: center; gap: 16px;
+        padding: 18px 22px; margin-bottom: 20px; cursor: pointer;
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: var(--radius); box-shadow: var(--shadow);
+        transition: transform .15s, box-shadow .15s;
+    }
+    .india-map-launch:hover { transform: translateY(-2px); }
+    .india-map-launch .map-ic {
+        width: 56px; height: 56px; border-radius: 14px; font-size: 26px;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--primary-soft); color: var(--primary);
+    }
+    .india-map-launch .t1 { font-weight: 700; color: var(--ink); }
+    .india-map-launch .t2 { font-size: 12px; color: var(--ink-3); }
+
+    /* popup */
+    #indiaMapModal {
+        /* NOT display:none - the hidden page must still be laid out so the SVG labels are placed correctly */
+        display: flex; position: fixed; inset: 0; z-index: 100000;
+        background: rgba(10, 25, 40, .60);
+        align-items: center; justify-content: center;
+        visibility: hidden; opacity: 0; pointer-events: none; transition: opacity .15s;
+    }
+    #indiaMapModal.open { visibility: visible; opacity: 1; pointer-events: auto; }
+    #indiaMapModal .im-spin {
+        position: absolute; font: 700 15px Arial; color: #24549f; display: none;
+    }
+    #indiaMapModal .im-spin.show { display: block; }
+    #indiaMapModal .im-box {
+        width: 94vw; height: 92vh; display: flex; flex-direction: column;
+        background: #fff; border-radius: 14px; overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    }
+    #indiaMapModal .im-head {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 18px; color: #fff; font-weight: 700; letter-spacing: 1px;
+        background: linear-gradient(135deg, #24549f, #3980d8);
+    }
+    #indiaMapModal .im-close {
+        background: rgba(255,255,255,.2); border: 0; color: #fff;
+        width: 34px; height: 34px; border-radius: 8px; font-size: 20px; cursor: pointer;
+    }
+    #indiaMapModal iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+
     </style>
 
 </head>
-
 
 <body>
 
     <!-- LOADING SCREEN -->
     <div id="pageLoader">
-        <img src="~/Models/logo1.png"
-             class="loading-logo"
-             alt="Hospital Based Cancer Registry" />
+        <img src="~/Models/logo1.png" class="loading-logo" alt="Hospital Based Cancer Registry" />
     </div>
 
     <!-- Main Dashboard -->
@@ -888,28 +874,19 @@
          SIDEBAR
     ========================================================== -->
 
-    <aside class="sidebar"
-           id="sidebar">
-
+    <aside class="sidebar" id="sidebar">
 
         <div class="sb-head">
 
             <i class="fa-solid fa-bars sb-burger"></i>
 
-            <span class="sb-title">
-                Registry Menu
-            </span>
+            <span class="sb-title"> Registry Menu </span>
 
         </div>
 
-
         <div class="sb-scroll">
 
-
-            <div class="sb-section">
-                Navigation
-            </div>
-
+            <div class="sb-section"> Navigation  </div>
 
             <!-- DASHBOARD -->
             <div class="nav-item active" id="dashboardNav">
@@ -967,26 +944,15 @@
 
 
                 <div class="center-box">
-
                     <select class="center-select" id="centerSelect">
-
                         <option value="registry"> Select registry center </option>
-
                         <option value="mumbai"> Mumbai</option>
-
                         <option value="varanasi"> Varanasi </option>
-
                         <option value="vizag"> Vizag </option>
-
                         <option value="sangrur"> Sangrur </option>
-
                     </select>
-
                 </div>
-
-            </div>
-              
-            
+            </div>                       
             
             <div id="sitesSection">
                 <div class="sb-section">
@@ -1017,11 +983,7 @@
                     <option value=">=60">>=60</option>
                 </select>
             </div>
-           
-         
-              
-            
-        
+                                            
         </div>
 
     </aside>
@@ -1186,7 +1148,30 @@
             </div>
 
         </section>
-        <div> India Map </div>
+        <!--  map -->
+
+        <div class="section-title">
+            INDIA PATIENT REGISTRY MAP   
+        </div>
+        <div class="india-map-launch" id="openIndiaMap">
+            <div class="map-ic"><i class="fa-solid fa-map-location-dot"></i></div>
+            <div>
+                <div class="t1">Click to open India Map</div>
+                <div class="t2" id="mapFilterSummary">All Registry Centers · All Sites · All Ages</div>
+            </div>
+        </div>
+        <div id="indiaMapModal">
+            <div class="im-box">
+                <div class="im-head">
+                    <span>INDIA PATIENT REGISTRY MAP</span>
+                    <button type="button" class="im-close" id="closeIndiaMap">&times;</button>
+                </div>
+                <div class="im-spin" id="indiaMapSpin">Loading map...</div>
+                <iframe id="indiaMapFrame" src="about:blank"></iframe>
+            </div>
+        </div>
+        
+       
 
         <!-- =====================================================
              CLINICAL EXTENT
@@ -1301,44 +1286,30 @@
 
             </span>
 
-        </footer>
-
-
+       </footer>
     </main>
-
-
     <!-- =========================================================
          FONT AWESOME
     ========================================================== -->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"
-            crossorigin="anonymous"></script>
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"crossorigin="anonymous"></script>
     <!-- =========================================================
          AMCHARTS 3
     ========================================================== -->
 
     <script src="~/assets/amcharts.js"></script>
-
     <script src="~/assets/serial.js"></script>
-
     <script src="~/assets/pie.js"></script>
-
     <script src="~/assets/radar.js"></script>
-
 
     <!-- =========================================================
          CORE4 / AMCHARTS 4
     ========================================================== -->
 
     <script src="~/assets/core4.js"></script>
-
     <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
-
     <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
-
-   
+  
     <!-- =========================================================
          DASHBOARD JAVASCRIPT
     ========================================================== -->
@@ -1358,8 +1329,6 @@
 
     </script>
     <script>
-
-
 
         // ============================================================
         // GLOBAL VARIABLES
@@ -1450,7 +1419,6 @@
 
         };
 
-       
         // ============================================================
         // CLINICAL CHART
         // ============================================================
@@ -1607,7 +1575,6 @@
 
         }
 
-
         // ============================================================
         // AGE CHART
         // ============================================================
@@ -1707,7 +1674,6 @@
                });
 
         }
-
 
         // ============================================================
         // TTI CHART
@@ -2012,7 +1978,7 @@
         // LOAD SITE DASHBOARD
         // ============================================================
 
-      
+
 var dashboardRequest = null;
 
 function loadSiteDashboard(center, system4, System2,ages) {
@@ -2026,7 +1992,7 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
     $("#centerPill").text("Loading...");
 
-    dashboardRequest = 
+    dashboardRequest =
         $.ajax({
         url: '@Url.Action("GetSiteDashboardData", "Home")',
             type: "GET",
@@ -2041,16 +2007,13 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
         success: function (data) {
 
-            $("#statTotal").text(
-                Number(data.total || 0).toLocaleString()
+            $("#statTotal").text( Number(data.total || 0).toLocaleString()
             );
 
-            $("#statMale").text(
-                Number(data.male || 0).toLocaleString()
+            $("#statMale").text( Number(data.male || 0).toLocaleString()
             );
 
-            $("#statFemale").text(
-                Number(data.female || 0).toLocaleString()
+            $("#statFemale").text( Number(data.female || 0).toLocaleString()
             );
 
             if (clinicalChart) {
@@ -2096,8 +2059,6 @@ function loadSiteDashboard(center, system4, System2,ages) {
     });
 }
 
-
-
         // ============================================================
         // CENTER CHANGE
         // ============================================================
@@ -2108,9 +2069,6 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
             // Reset age selection when the registry center changes
                 $("#ageDropdown").val(null).trigger("change.select2");
-              
-
-
 
                 selectedCenter =  center;
 
@@ -2140,9 +2098,7 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
                     data: {
                         center:  center,
-
-
-            ages: $("#ageDropdown").val() || []
+                        ages: $("#ageDropdown").val() || []
                     },
 
                     success:
@@ -2158,7 +2114,6 @@ function loadSiteDashboard(center, system4, System2,ages) {
                             );
 
                         },
-
 
                     error:
                         function (xhr) {
@@ -2214,23 +2169,23 @@ function loadSiteDashboard(center, system4, System2,ages) {
         // SYSTEM4 CHANGE
         // ============================================================
 
-        $("#system4Dropdown").on("change", function () 
-        { 
-            var center = $("#centerSelect").val(); 
+        $("#system4Dropdown").on("change", function ()
+        {
+            var center = $("#centerSelect").val();
             var system4 = $(this).val() || "";
-            selectedCenter = center; 
-            selectedSystem4 = system4; 
-            selectedSystem2 = ""; 
-            // Reset subsites 
-            $("#System2Dropdown") .empty() .append('<option value="">All Subsites</option>'); 
-            // If All Sites is selected, hide subsites 
+            selectedCenter = center;
+            selectedSystem4 = system4;
+            selectedSystem2 = "";
+            // Reset subsites
+            $("#System2Dropdown") .empty() .append('<option value="">All Subsites</option>');
+            // If All Sites is selected, hide subsites
             if (system4 === "") { $("#System2Dropdown").hide();
                 var ages = $("#ageDropdown").val() || [];
                 loadSiteDashboard(center, "", "", ages);
-                return; 
-            } 
+                return;
+            }
             // Show the subsite dropdown
-            $("#System2Dropdown").show(); 
+            $("#System2Dropdown").show();
 
             // Keep the selected age groups
             var ages = $("#ageDropdown").val() || [];
@@ -2239,30 +2194,30 @@ function loadSiteDashboard(center, system4, System2,ages) {
             loadSiteDashboard(center, system4, "", ages);
 
             // Fetch subsites belonging to the selected site
-            $.ajax({ url: '@Url.Action("GetSubSites", "Home")', 
+            $.ajax({ url: '@Url.Action("GetSubSites", "Home")',
                 type: "GET",
-                traditional: true, 
-                data: { center: center, system4: system4 }, 
-                success: 
-                    function (subSites) 
+                traditional: true,
+                data: { center: center, system4: system4 },
+                success:
+                    function (subSites)
                     {
-                        console.log("Subsites received:", subSites); 
-                        $("#System2Dropdown") .empty() .append('<option value="">All Subsites</option>'); 
+                        console.log("Subsites received:", subSites);
+                        $("#System2Dropdown") .empty() .append('<option value="">All Subsites</option>');
                         $.each(subSites || [], function (i, subSite)
                         {
-                            $("#System2Dropdown").append( $("<option></option>") .val(subSite) .text(subSite) ); 
+                            $("#System2Dropdown").append( $("<option></option>") .val(subSite) .text(subSite) );
                         });
                     },
-                error: function (xhr) 
-                { 
+                error: function (xhr)
+                {
                     console.log
-                        ( 
+                        (
                         "GetSubSites error:",
-                        xhr.status, 
-                        xhr.responseText 
-                        ); 
-                } 
-            }); 
+                        xhr.status,
+                        xhr.responseText
+                        );
+                }
+            });
         });
 
 
@@ -2356,16 +2311,11 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
 
                 // Reset Sites
-                $("#system4Dropdown")
-                    .empty()
-                    .append('<option value="">All Sites</option>');
+                $("#system4Dropdown")  .empty() .append('<option value="">All Sites</option>');
 
 
                 // Reset Subsites
-                $("#System2Dropdown")
-                    .empty()
-                    .append('<option value="">All Subsites</option>')
-                    .hide();
+                $("#System2Dropdown") .empty().append('<option value="">All Subsites</option>').hide();
 
 
                 $.ajax({
@@ -2387,9 +2337,7 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
                             $("#system4Dropdown").append(
 
-                                $('<option>')
-                                    .val(site)
-                                    .text(site)
+                                $('<option>').val(site).text(site)
 
                             );
 
@@ -2437,38 +2385,26 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
 
                 // Show All Sites dropdown
-                $("#system4Dropdown")
-                    .closest(".center-box")
-                    .show();
-
+                $("#system4Dropdown").closest(".center-box").show();
 
                 // Subsite should initially be hidden
-                $("#System2Dropdown")
-                    .closest(".center-box")
-                    .show();
+                $("#System2Dropdown").closest(".center-box").show();
 
                 $("#System2Dropdown").hide();
-
 
                 // Use ALL CENTERS
                 $("#centerSelect").val("registry");
 
-
                 selectedCenter = "registry";
                 selectedSystem4 = "";
                 selectedSystem2 = "";
-
 
                 // Load Sites for Registry / All Centers
                 loadSystem4Sites("registry");
 
 
                 // Load All Centers dashboard
-                loadSiteDashboard(
-                    "registry",
-                    "",
-                    ""
-                );
+                loadSiteDashboard( "registry", "",  ""  );
 
 
                 // Header
@@ -2476,12 +2412,9 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
                 $("#center-label").text("Registry");
 
-                $("#brandSub").text(
-                    "All Registry Centers ·"
-                );
+                $("#brandSub").text( "All Registry Centers ·" );
 
             }
-
 
             // =========================================================
             // REPORT MENU
@@ -2491,68 +2424,46 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
                 console.log("Report clicked");
 
-
                 // Report ACTIVE
                 $("#reportNav").addClass("active");
 
                 // Dashboard INACTIVE
                 $("#dashboardNav").removeClass("active");
 
-
                 // Show Registry
                 $("#registrySection").show();
 
-
-                // Show Sites
+               // Show Sites
                 $("#sitesSection").show();
 
-
                 // Show Site dropdown
-                $("#system4Dropdown")
-                    .closest(".center-box")
-                    .show();
-
+                $("#system4Dropdown").closest(".center-box").show();
 
                 // Subsite initially hidden
-                $("#System2Dropdown")
-                    .closest(".center-box")
-                    .show();
+                $("#System2Dropdown") .closest(".center-box").show();
 
                 $("#System2Dropdown").hide();
 
-
                 // Default Registry
                 $("#centerSelect").val("registry");
-
 
                 selectedCenter = "registry";
                 selectedSystem4 = "";
                 selectedSystem2 = "";
 
-
                 // Load Sites for Registry
                 loadSystem4Sites("registry");
 
-
                 // Load Registry dashboard
-                loadSiteDashboard(
-                    "registry",
-                    "",
-                    ""
-                );
-
+                loadSiteDashboard( "registry", "", "" );
 
                 // Header
                 $("#centerPill").text("All Centers");
 
                 $("#center-label").text("Registry");
 
-                $("#brandSub").text(
-                    "All Registry Centers ·"
-                );
-
+                $("#brandSub").text( "All Registry Centers ·" );
             }
-
 
             // =========================================================
             // DASHBOARD CLICK
@@ -2582,33 +2493,22 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
             $("#themeBtn").on("click", function () {
 
-                var current =
-                    document.documentElement.getAttribute("data-theme");
+                var current =  document.documentElement.getAttribute("data-theme");
 
-                var next =
-                    current === "dark"
-                        ? "light"
-                        : "dark";
+                var next = current === "dark"  ? "light" : "dark";
 
 
-                document.documentElement.setAttribute(
-                    "data-theme",
-                    next
-                );
+                document.documentElement.setAttribute( "data-theme",  next );
 
 
                 try {
 
-                    localStorage.setItem(
-                        "hbcr-theme",
-                        next
-                    );
+                    localStorage.setItem( "hbcr-theme", next );
 
                 }
                 catch (e) { }
 
             });
-
 
             // =========================================================
             // LOAD SAVED THEME
@@ -2616,35 +2516,33 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
             try {
 
-                var savedTheme =
-                    localStorage.getItem("hbcr-theme");
+                var savedTheme =  localStorage.getItem("hbcr-theme");
 
 
                 if (savedTheme) {
 
-                    document.documentElement.setAttribute(
-                        "data-theme",
-                        savedTheme
-                    );
+                    document.documentElement.setAttribute("data-theme",  savedTheme );
 
                 }
-
             }
             catch (e) { }
 
-
         });
 
-
-
-       
         // ============================================================
         // PAGE READY
         // ============================================================
 
+
+   
+
+
+
+
+
+
         $(document).ready( function ()
         {
-
 
             // =====================================================
             // STARTING PAGE = DASHBOARD
@@ -2653,28 +2551,19 @@ function loadSiteDashboard(center, system4, System2,ages) {
             $("#dashboardNav").addClass("active");
             $("#reportNav").removeClass("active");
 
-
             // Registry hidden
             $("#registrySection").hide();
-
 
             // Sites visible because Dashboard is selected
             $("#sitesSection").show();
 
-
             // All Sites visible
-            $("#system4Dropdown")
-                .closest(".center-box")
-                .show();
-
+            $("#system4Dropdown") .closest(".center-box").show();
 
             // All Subsites initially hidden
-            $("#System2Dropdown")
-                .closest(".center-box")
-                .show();
+            $("#System2Dropdown") .closest(".center-box").show();
 
             $("#System2Dropdown").hide();
-
 
             // Initialize Age Category Select2 only once
             if (!$("#ageDropdown").hasClass("select2-hidden-accessible")) {
@@ -2704,16 +2593,13 @@ function loadSiteDashboard(center, system4, System2,ages) {
                 ) {
 
                     Metronic.init();
-
                 }
-
 
                 if (
                     typeof Layout !== "undefined"
                 ) {
 
                     Layout.init();
-
                 }
 
                 // =====================================================
@@ -2752,18 +2638,10 @@ function loadSiteDashboard(center, system4, System2,ages) {
                 $("#statTotal").text( Number( centerCounts.registry.total ).toLocaleString()  );
 
 
-                $("#statMale")
-                    .text(
-                        Number(centerCounts.registry.male ).toLocaleString()
-                    );
+                $("#statMale").text( Number(centerCounts.registry.male ).toLocaleString() );
 
 
-                $("#statFemale")
-                    .text(
-                        Number( centerCounts.registry.female).toLocaleString()
-                    );
-
-
+                $("#statFemale") .text( Number( centerCounts.registry.female).toLocaleString() );
 
                 // LOAD DEFAULT CHARTS
 
@@ -2779,14 +2657,83 @@ function loadSiteDashboard(center, system4, System2,ages) {
                 console.log( "TTI chart:",ttiChart);
 
                 console.log( "Dashboard initialized successfully" );
-
             }
         );
 
-     
+
+
+
+
+
+
     </script>
+    <script>
+        // Uses your existing globals: selectedCenter, selectedSystem4, selectedSystem2
+        // and the #ageDropdown select2.
+        function getMapFilters() {
+            return {
+                center: selectedCenter || "registry",
+                system4: selectedSystem4 || "",
+                System2: selectedSystem2 || "",
+                ages: $("#ageDropdown").val() || []
+            };
+        }
 
+        function updateMapSummary() {
+            var f = getMapFilters();
+            var c = f.center === "mumbai" ? "Mumbai" : f.center === "vizag" ? "Vizag" : "All Registry Centers";
+            $("#mapFilterSummary").text(
+                c + " · " + (f.system4 || "All Sites") + " · " + (f.System2 || "All Subsites") +
+                " · " + (f.ages.length ? f.ages.join(", ") : "All Ages"));
+        }
+
+        var mapLoadedUrl = "";
+        var mapPreloadTimer = null;
+
+        function currentMapUrl() {
+            // $.param(..., true) => ages=a&ages=b  (what the MVC List<string> binder expects)
+            return '@Url.Action("Indiamap", "Home")' + '?' + $.param(getMapFilters(), true);
+        }
+
+        // load the map page in the background (only if the filters changed)
+        function preloadIndiaMap() {
+            var url = currentMapUrl();
+            if (url === mapLoadedUrl) return;
+            mapLoadedUrl = url;
+            $("#indiaMapFrame").attr("src", url);
+        }
+
+        function openIndiaMap() {
+            var url = currentMapUrl();
+            if (url !== mapLoadedUrl) {                 // not preloaded yet
+                $("#indiaMapSpin").addClass("show");
+                preloadIndiaMap();
+            }
+            $("#indiaMapModal").addClass("open");
+        }
+
+        function closeIndiaMap() {
+            $("#indiaMapModal").removeClass("open");    // keep the page loaded => instant re-open
+        }
+
+        $("#indiaMapFrame").on("load", function () { $("#indiaMapSpin").removeClass("show"); });
+
+        $("#openIndiaMap").on("click", openIndiaMap)
+                          .on("mouseenter", preloadIndiaMap);
+        $("#closeIndiaMap").on("click", closeIndiaMap);
+        $("#indiaMapModal").on("click", function (e) { if (e.target === this) closeIndiaMap(); });
+        $(document).on("keydown", function (e) { if (e.key === "Escape") closeIndiaMap(); });
+
+        // keep the summary text in sync with the filters
+        $("#centerSelect, #system4Dropdown, #System2Dropdown, #ageDropdown").on("change", function () {
+            setTimeout(updateMapSummary, 0);
+            // wait until the user stops clicking filters, then preload the map in the background
+            clearTimeout(mapPreloadTimer);
+            mapPreloadTimer = setTimeout(preloadIndiaMap, 1200);
+        });
+        $(updateMapSummary);
+        $(window).on("load", function () { setTimeout(preloadIndiaMap, 1500); });   // first preload after dashboard is ready
+    </script>
 </body>
-
 </html>
 
