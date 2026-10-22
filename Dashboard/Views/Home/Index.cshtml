@@ -922,6 +922,20 @@
             <div id="registrySection">
 
                 <div class="sb-section">
+                    Report Year
+                </div>
+                <div class="center-box">
+                    <select class="center-select" id="yearSelect">
+                        <option value="">All Years</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                    </select>
+                    <div id="yearNote" style="display:none; font-size:11px; color:#e57373; padding:4px 2px;"></div>
+                </div>
+
+
+                <div class="sb-section">
                     Center Selection
                 </div>
 
@@ -1968,7 +1982,8 @@
                 title +=  " - " + System2;
 
             }
-
+            var yr = $("#yearSelect").val();                     // <-- ADD
+            if (yr) title += " (" + yr + ")";                    // <-- ADD
             $("#centerPill") .text(title);
 
         }
@@ -2001,7 +2016,8 @@ function loadSiteDashboard(center, system4, System2,ages) {
             center: center,
             system4: system4,
             System2: System2,
-            ages: ages
+            ages: ages,
+            year: $("#yearSelect").val() || ""
         },
         traditional: true,
 
@@ -2098,7 +2114,8 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
                     data: {
                         center:  center,
-                        ages: $("#ageDropdown").val() || []
+                        ages: $("#ageDropdown").val() || [],
+                        year: $("#yearSelect").val() || ""  
                     },
 
                     success:
@@ -2197,7 +2214,7 @@ function loadSiteDashboard(center, system4, System2,ages) {
             $.ajax({ url: '@Url.Action("GetSubSites", "Home")',
                 type: "GET",
                 traditional: true,
-                data: { center: center, system4: system4 },
+                data: { center: center, system4: system4, year: $("#yearSelect").val() || "" },
                 success:
                     function (subSites)
                     {
@@ -2325,7 +2342,8 @@ function loadSiteDashboard(center, system4, System2,ages) {
                     type: 'GET',
 
                     data: {
-                        center: center
+                        center: center,
+                        year: $("#yearSelect").val() || ""
                     },
 
                     success: function (sites) {
@@ -2394,6 +2412,7 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
                 // Use ALL CENTERS
                 $("#centerSelect").val("registry");
+                resetYear(); 
 
                 selectedCenter = "registry";
                 selectedSystem4 = "";
@@ -2446,6 +2465,7 @@ function loadSiteDashboard(center, system4, System2,ages) {
 
                 // Default Registry
                 $("#centerSelect").val("registry");
+                resetYear();  
 
                 selectedCenter = "registry";
                 selectedSystem4 = "";
@@ -2733,6 +2753,42 @@ function loadSiteDashboard(center, system4, System2,ages) {
         });
         $(updateMapSummary);
         $(window).on("load", function () { setTimeout(preloadIndiaMap, 1500); });   // first preload after dashboard is ready
+    </script>
+
+    <script>
+    // year -> centers that have a report in that year (comes from YearCenters in the controller)
+    var yearCenters = @Html.Raw(Json.Encode(ViewBag.YearCenters));
+
+    // enable only the centers that have a report in the chosen year
+    function applyYearToCenters() {
+        var year = $("#yearSelect").val();
+
+        $("#centerSelect option").each(function () {
+            if (this.value === "registry") return;
+            var ok = !year || (yearCenters[year] || []).indexOf(this.value) !== -1;
+            $(this).prop("disabled", !ok);
+        });
+
+        var noReport = year && (yearCenters[year] || []).length === 0;
+        $("#yearNote").text(noReport ? "No report available for " + year : "").toggle(!!noReport);
+    }
+
+    $("#yearSelect").on("change", function () {
+        applyYearToCenters();
+
+        var $c = $("#centerSelect");
+        if ($c.find("option:selected").prop("disabled")) $c.val("registry");   // selected center has no report this year
+
+        // your existing center handler resets age/site/subsite and reloads the dashboard
+        // (loadSiteDashboard + site list now send the year, see C below)
+        $c.trigger("change");
+    });
+
+    // used by the Dashboard / Registry buttons to go back to "All Years"
+    function resetYear() {
+        $("#yearSelect").val("");
+        applyYearToCenters();
+    }
     </script>
 </body>
 </html>
